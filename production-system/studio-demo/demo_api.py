@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 from fastapi import Depends,HTTPException
 HERE=Path(__file__).resolve().parent
-B3=HERE.parent/"b3-private-artifact-store-20261016"
+B3=HERE.parent/"private-artifact-store"
 sys.path.insert(0,str(B3))
 import tenant_api as t
 

@@ -5,10 +5,10 @@ import argparse,fcntl,json,os,sqlite3,sys,time,traceback
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
 SRC=HERE.parent
-B3=SRC/"b3-private-artifact-store-20261016"
+B3=SRC/"private-artifact-store"
 sys.path.insert(0,str(SRC))
 sys.path.insert(0,str(B3))
-from b3_worker_receipt_bridge import publish_archived
+from worker_receipt_bridge import publish_archived
 
 def publish_previous(db_path,private_root,output_root):
     published=[];skipped=[]

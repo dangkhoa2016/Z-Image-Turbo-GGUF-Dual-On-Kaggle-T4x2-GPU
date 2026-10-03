@@ -25,8 +25,8 @@ cfg["service_key"]=env["ZIMAGE_B1_API_KEY"]
 path.write_text(json.dumps(cfg))
 os.chmod(path,0o600)
 processes=[
- ("api",["python3","-m","uvicorn","demo_api:app","--host","127.0.0.1","--port","18788"],PROD/"b3-demo-studio-20261016"),
- ("gateway",["python3","-m","uvicorn","gateway:app","--host","127.0.0.1","--port","18789"],ROOT/"product-studio-vue-cdn-v3"),
+ ("api",["python3","-m","uvicorn","demo_api:app","--host","127.0.0.1","--port","18788"],PROD/"studio-demo"),
+ ("gateway",["python3","-m","uvicorn","gateway:app","--host","127.0.0.1","--port","18789"],ROOT/"product-studio"),
 ]
 for name,command,cwd in processes:
  log=(RUN/(name+".log")).open("ab")
