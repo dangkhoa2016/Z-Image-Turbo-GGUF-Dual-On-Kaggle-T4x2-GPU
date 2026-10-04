@@ -1,0 +1,9 @@
+Z-Image-Turbo GGUF Dual on Kaggle T4x2 GPU
+Copyright 2026 Đăng Khoa <i.am@dangkhoa.dev>
+
+Project-authored contributions: MIT LICENSE at repository root.
+Upstream Z-Image/Z-Image-Turbo model: Apache-2.0 (Tongyi-MAI).
+Quantized GGUF distribution: Unsloth (Apache-2.0 model listing).
+Libraries and model weights remain third-party materials.
+See LICENSE-NOTES.md and LICENSE-NOTES.vi.md for full attribution.
+No model weights are distributed in this Git repository.
