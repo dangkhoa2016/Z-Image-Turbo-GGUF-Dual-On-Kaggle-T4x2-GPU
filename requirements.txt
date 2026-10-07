@@ -1,0 +1,14 @@
+# Minimum application dependencies; GPU library/runtime versions need matching Kaggle environment.
+fastapi
+uvicorn
+python-multipart
+pydantic
+# numpy is required at runtime by safetensors.torch.save_file, which
+# encode_batch_gpu.py / encode_batch_cpu_mock.py call to publish embeddings.
+numpy
+safetensors
+accelerate
+transformers
+diffusers
+gguf
+torchao
