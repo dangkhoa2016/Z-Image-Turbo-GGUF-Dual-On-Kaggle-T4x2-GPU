@@ -1,0 +1,119 @@
+{
+  "schema": "zimage.runtime-compatibility/v1",
+  "generated_at": "2026-10-17",
+  "generated_by": "OpenCode CLI preflight on a CPU-only audit host (no nvidia-smi)",
+  "status": "PARTIAL_PENDING_GPU",
+  "status_reason": "Vendor wheels and CPU/CI references are verified here; the PyTorch/CUDA/Transformers/Accelerate/Python versions of the accepted Kaggle T4x2 runtime are UNKNOWN and must be measured on a live T4x2 session before this lock can be called complete.",
+  "target_platform": {
+    "accelerator": "NVIDIA Tesla T4 x2 (Kaggle)",
+    "os": "Linux",
+    "arch": "x86_64",
+    "python": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "cuda_driver": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "note": "The audit host is Linux x86_64 but CPU-only; its interpreter must not be recorded as the GPU lock."
+  },
+  "vendor_wheels": {
+    "provenance": "scripts/bootstrap_vendor.py LOCK; wheels fetched with 'pip download --no-deps --only-binary=:all: <pkg>==<ver>' or supplied offline via --wheel-dir, then verified by wheel SHA256, extracted tree SHA256, dist-info version and license presence.",
+    "verification_command": "python scripts/bootstrap_vendor.py && python scripts/verify_vendor_runtime.py",
+    "wheels": [
+      {
+        "vendor_dir": "vendor-diffusers041",
+        "package": "diffusers",
+        "version": "0.41.0",
+        "wheel_sha256": "ea8918b7dfd92ce793b6db689a551b8cd25d52c6c0fcd3ade0706a5fd2a25990",
+        "tree_files": 1049,
+        "tree_sha256": "72ac24529e14780a4bae6fe5c77e6a8dca83d99109dd4293e4bf18a1008fd6bb",
+        "dist_info_sha256": "1d4524b41155c48165cbba255a933bf1295bc4a2f759e64322e6697c122a030b",
+        "license": "Apache-2.0",
+        "platform": "py3-none-any"
+      },
+      {
+        "vendor_dir": "vendor-hub128",
+        "package": "huggingface_hub",
+        "version": "1.28.0",
+        "wheel_sha256": "58a8bacb03072edfc38067065e9dc24bbb34805410fcd36a1632de0b329660bb",
+        "tree_files": 186,
+        "tree_sha256": "378ffe0a4512d769bb22cec63829111ead8edb3e3025e479381dd8ee17bd2b18",
+        "dist_info_sha256": "a1b4a60771137661a2df17921843b2fc9c574747a26e1d7e5a74abd19dde3769",
+        "license": "Apache-2.0",
+        "platform": "py3-none-any"
+      },
+      {
+        "vendor_dir": "vendor-torchao015",
+        "package": "torchao",
+        "version": "0.15.0",
+        "wheel_sha256": "1cbe813201314ba6329a650a76944502f3e8ec4b1b44523f3f48676810d8d1f6",
+        "tree_files": 422,
+        "tree_sha256": "2938bd2dc06cafb99069baf85e4157d1b3ec93e3aab1ed2442d6aaf61e9ee3e0",
+        "dist_info_sha256": "0de5e448164cdb6f610bee2ded833be9245fe1f9e3a87b3393336713a22713a9",
+        "license": "BSD-3-Clause",
+        "platform": "linux x86_64 cp310-abi3 (native extension, not cross-platform)"
+      },
+      {
+        "vendor_dir": "vendor-gguf",
+        "package": "gguf",
+        "version": "0.17.1",
+        "wheel_sha256": "7bc5aa7eeb1931f7d39b48fdc5b38fda6b294b9dca75cf607ac69557840a3943",
+        "tree_files": 18,
+        "tree_sha256": "e8cb59809d0b267e2abc078611333f6d59693190180b96ef76f4872534b9dcea",
+        "dist_info_sha256": "b2fd2f2dfb979a5de3f56f16699baadab82529dba3b0928212fdc55fc2337164",
+        "license": "MIT",
+        "platform": "py3-none-any"
+      }
+    ]
+  },
+  "gpu_runtime_lock": {
+    "pytorch": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "torch_cuda_build": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "transformers": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "accelerate": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "python": "UNKNOWN_PENDING_GPU_MEASUREMENT",
+    "how_to_fill": "On a clean Kaggle T4x2 session attached to the pinned candidate SHA, run the GPU environment report in the execution brief (torch.__version__, torch.version.cuda, device_count, device names, importlib.metadata versions) plus scripts/gpu_preflight.py and scripts/verify_vendor_runtime.py, then record the values here with the session id and candidate SHA.",
+    "policy": "Do not copy CPU host versions into this field and do not upgrade PyTorch on an accepted GPU runtime without compatibility evidence."
+  },
+  "cpu_ci_reference": {
+    "purpose": "Reproducibility of the CPU contract/security suite only. Not a GPU lock.",
+    "dependency_set": "requirements-ci.txt (intentionally unpinned; CI/CD dev dependencies)",
+    "install": "pip install -r requirements-ci.txt && pip install torch --index-url https://download.pytorch.org/whl/cpu",
+    "audit_host_measurements": {
+      "python": "3.13.15",
+      "torch": "2.11.0+cpu",
+      "numpy": "2.1.3",
+      "pillow": "12.3.0",
+      "fastapi": "0.141.1",
+      "httpx": "0.28.1",
+      "requests": "2.34.2",
+      "safetensors": "0.8.0",
+      "gpu_available": false
+    },
+    "note": "Measured with importlib.metadata on the audit host; versions float because requirements-ci.txt is unpinned by design."
+  },
+  "application_requirements": {
+    "file": "requirements.txt",
+    "pinning": "unpinned minimum set; GPU library versions must be validated against the Kaggle T4x2 lock above",
+    "runtime_dependency_note": "numpy is required by safetensors.torch.save_file, used by encode_batch_gpu.py and encode_batch_cpu_mock.py."
+  },
+  "model_inputs": {
+    "classification": "model/data inputs, not source code",
+    "model": {
+      "kaggle_model_ref": "dangkhoa2016/unsloth-z-image-turbo-gguf",
+      "variation": "q6-k",
+      "version": "1",
+      "gguf_sha256": "fc137d87b49e06fdd5230d67d6c8cfa42a9e1fd38b65ccd355882450c3eb1c82",
+      "gguf_sha256_verification_level": "prior machine digest; current machine not yet fully hashed",
+      "source_file": "manifests/model.json"
+    },
+    "support": {
+      "kaggle_dataset_ref": "dangkhoa2016/z-image-turbo-diffusers-support-components",
+      "manifest_sha256": "d2092798f917a83ed79981ec23cdb5d33ee25b86f667fa46a563476a083dd7d7",
+      "source_file": "manifests/support.json"
+    }
+  },
+  "verification": {
+    "cpu": "python scripts/run_cpu_tests.py  -> CPU_TESTS=PASS (16/16)",
+    "secrets": "python scripts/scan_secrets.py -> SECRET_SCAN=PASS",
+    "ci": ".github/workflows/repository-audit.yml",
+    "gpu": "PENDING — clean-room Kaggle T4x2 session on the pinned candidate SHA",
+    "browser": "PENDING — Studio View/Download over HTTPS on the same SHA"
+  }
+}
