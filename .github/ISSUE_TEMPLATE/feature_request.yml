@@ -1,0 +1,10 @@
+name: Feature request
+description: Suggest focused improvements / Đề xuất cải tiến
+title: "[Feature] "
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal and motivation / Đề xuất và lý do
+    validations:
+      required: true
