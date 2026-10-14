@@ -1,0 +1,9 @@
+Z-Image-Turbo GGUF Dual trên Kaggle T4x2 GPU
+Bản quyền © 2026 Đăng Khoa <i.am@dangkhoa.dev>
+
+Mã và tài liệu do dự án tự tạo: giấy phép MIT ở thư mục gốc.
+Model Z-Image/Z-Image-Turbo upstream: Apache-2.0 (Tongyi-MAI).
+Bản GGUF quantization: Unsloth (model card công bố Apache-2.0).
+Các thư viện và model weights là tài sản của bên thứ ba.
+Xem LICENSE-NOTES.md và LICENSE-NOTES.vi.md để biết nguồn và phạm vi giấy phép.
+Không phân phối model weights trong Git repository này.
