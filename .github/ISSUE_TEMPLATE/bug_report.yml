@@ -1,0 +1,15 @@
+name: Bug report
+description: Reproducible Kaggle demo defect
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary and steps to reproduce / Mô tả lỗi và bước tái hiện
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public-safe logs and environment / Log đã ẩn thông tin riêng tư
