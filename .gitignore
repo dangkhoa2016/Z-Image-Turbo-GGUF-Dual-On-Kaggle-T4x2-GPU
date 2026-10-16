@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite3*
+*.log
+*.pid
+*secrets*
+.env*
+*.png
+*.safetensors
+*.gguf
+*.key
+output/
+sessions/
+private/
+.ipynb_checkpoints/
