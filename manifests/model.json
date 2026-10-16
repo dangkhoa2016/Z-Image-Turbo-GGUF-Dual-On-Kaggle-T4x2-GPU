@@ -1,0 +1,9 @@
+{
+  "kaggle_model_ref": "dangkhoa2016/unsloth-z-image-turbo-gguf",
+  "variation": "q6-k",
+  "version": "1",
+  "gguf_path": "/kaggle/input/models/dangkhoa2016/unsloth-z-image-turbo-gguf/gguf/q6-k/1/z-image-turbo-Q6_K.gguf",
+  "gguf_bytes": 5910505536,
+  "gguf_sha256": "fc137d87b49e06fdd5230d67d6c8cfa42a9e1fd38b65ccd355882450c3eb1c82",
+  "gguf_sha256_verification_level": "prior machine digest; current machine not yet fully hashed"
+}
