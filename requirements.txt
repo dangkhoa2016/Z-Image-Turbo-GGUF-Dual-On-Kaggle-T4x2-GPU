@@ -1,0 +1,11 @@
+# Minimum application dependencies; GPU library/runtime versions need matching Kaggle environment.
+fastapi
+uvicorn
+python-multipart
+pydantic
+safetensors
+accelerate
+transformers
+diffusers
+gguf
+torchao
