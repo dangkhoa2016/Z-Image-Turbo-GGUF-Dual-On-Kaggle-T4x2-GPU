@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this Kaggle dual-GPU demonstration, cite the project and upstream model separately."
+title: "Z-Image-Turbo GGUF Dual on Kaggle T4x2 GPU"
+type: software
+authors:
+  - family-names: "Khoa"
+    given-names: "Đăng"
+    email: "i.am@dangkhoa.dev"
+repository-code: "https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU"
+license: MIT
+date-released: 2026-10-16
