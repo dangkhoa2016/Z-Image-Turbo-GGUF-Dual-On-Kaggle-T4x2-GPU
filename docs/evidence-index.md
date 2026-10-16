@@ -8,5 +8,5 @@
 - [Studio elapsed seconds](../evidence/B3-DEMO-UI-TOTAL-SECONDS-ACCEPTANCE-20261016.json): total seconds visible for six completed jobs.
 - [Public HTTPS browser](../evidence/B3-PUBLIC-HTTPS-STUDIO-ACCEPTANCE-20261016.json): sign-in, three existing images and sign-out via temporary tunnel.
 
-## Not an all-PASS quality claim
-Historical Pilot32 image quality/adherence was NOT_PASS; preserve rejected cases. Original 48/122 HTML galleries were not in this runtime. The repo rewrite and notebook have NOT yet passed a fresh Kaggle environment replay. These JSONs record past isolated verifications, not current cloud availability. No passwords, API keys or private image bytes are included.
+## Visual-quality and new-runtime verification boundaries
+The historical Pilot32 visual-quality and prompt-adherence gate was **NOT_PASS**; rejected cases remain part of the evidence. Original 48/122 HTML galleries were not in this runtime. The repo rewrite and notebook have NOT yet passed a fresh Kaggle environment replay. These JSONs record past isolated verifications, not current cloud availability. No passwords, API keys or private image bytes are included.

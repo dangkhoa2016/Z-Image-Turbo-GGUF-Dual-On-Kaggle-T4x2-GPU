@@ -8,5 +8,5 @@
 - [Tổng thời gian xử lý](../evidence/B3-DEMO-UI-TOTAL-SECONDS-ACCEPTANCE-20261016.json): hiển thị giây cho 6 job completed.
 - [HTTPS browser](../evidence/B3-PUBLIC-HTTPS-STUDIO-ACCEPTANCE-20261016.json): đăng nhập, xem 3 ảnh cũ và đăng xuất bằng URL tunnel tạm thời.
 
-## Không khẳng định toàn bộ QC đạt
-Pilot32 từng NOT_PASS về chất lượng/độ đúng prompt; giữ nguyên các ca reject. Không có gallery HTML gốc 48/122 trong runtime hiện tại. Repo và notebook sau rewrite CHƯA PASS clean-run Kaggle. JSON phản ánh kiểm thử trước, không khẳng định cloud đang online. Không đóng gói mật khẩu, API key hay PNG riêng tư.
+## Giới hạn đánh giá chất lượng ảnh và kiểm thử môi trường mới
+Pilot32 từng có kết quả **NOT_PASS** về chất lượng ảnh và độ đúng prompt; các ca bị loại vẫn được giữ trong bằng chứng. Không có gallery HTML gốc 48/122 trong runtime hiện tại. Repo và notebook sau rewrite CHƯA PASS clean-run Kaggle. JSON phản ánh kiểm thử trước, không khẳng định cloud đang online. Không đóng gói mật khẩu, API key hay PNG riêng tư.
