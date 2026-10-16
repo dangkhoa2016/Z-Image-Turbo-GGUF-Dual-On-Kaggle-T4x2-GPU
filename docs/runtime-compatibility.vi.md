@@ -10,7 +10,7 @@ Z-Image-Turbo GGUF Q6_K đã chạy thực tế trên **Kaggle Tesla T4 ×2**, v
 
 1. Chọn **GPU T4 ×2** và bật Internet cho lần chuẩn bị môi trường đầu tiên.
 2. Attach model GGUF `dangkhoa2016/unsloth-z-image-turbo-gguf`, biến thể `q6-k`, phiên bản 1, và dataset `dangkhoa2016/z-image-turbo-diffusers-support-components`.
-3. Mở notebook trình diễn. Chạy tuần tự để kiểm tra dữ liệu, khởi động API/Studio và GPU consumer rồi mở hai website HTTPS.
+3. Mở [notebook trình diễn](../notebooks/kaggle-dual-gpu-production-demo.ipynb). Chạy tuần tự để kiểm tra dữ liệu, khởi động API/Studio và GPU consumer rồi mở hai website HTTPS.
 4. Đăng nhập bằng tài khoản demo được tạo trong notebook, nhập prompt, kiểm tra job, artifact và tải ảnh. Để minh họa dual inference, kiểm tra hai GPU với các job riêng.
 
 ## Tương thích runtime

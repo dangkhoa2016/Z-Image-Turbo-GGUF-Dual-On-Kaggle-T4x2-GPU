@@ -10,7 +10,7 @@ Z-Image-Turbo GGUF Q6_K has been exercised on **Kaggle Tesla T4 ×2** using a bo
 
 1. Select **GPU T4 ×2** and enable Internet access for the initial setup.
 2. Attach the Kaggle GGUF model `dangkhoa2016/unsloth-z-image-turbo-gguf`, variant `q6-k`, version 1, and the dataset `dangkhoa2016/z-image-turbo-diffusers-support-components`.
-3. Open the showcase notebook. Run its cells in order to check the inputs, start API/Studio and the GPU queue consumer, then publish the two HTTPS websites.
+3. Open [the showcase notebook](../notebooks/kaggle-dual-gpu-production-demo.ipynb). Run its cells in order to check the inputs, start API/Studio and the GPU queue consumer, then publish the two HTTPS websites.
 4. Use Studio's generated demo login, submit a prompt, and verify the job, artifact and image retrieval. Check both GPUs with separate jobs when demonstrating dual inference.
 
 ## Environment compatibility
