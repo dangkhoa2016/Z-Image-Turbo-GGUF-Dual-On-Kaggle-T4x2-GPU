@@ -1,0 +1,35 @@
+{
+  "status": "PASS_BOUNDED_DUAL_GPU_E2E",
+  "machine": "80ae79839309",
+  "session_id": "b112-15eaf60ee03d40d4b3e6bf1b72a94f17",
+  "session_status": "ARCHIVED",
+  "jobs": [
+    {
+      "job_id": "4d9010b3-3acc-4fc5-b83b-428cac341926",
+      "worker": 0,
+      "state": "completed",
+      "attempt": 1,
+      "bytes": 1724242,
+      "sha256": "7072dd7dd53132da3de2b30c023a90f285c4064e7904827d81588207c5e216f9",
+      "auth_image_http": 200
+    },
+    {
+      "job_id": "b35aa44a-05dc-472e-82c3-15a26bc146e1",
+      "worker": 1,
+      "state": "completed",
+      "attempt": 1,
+      "bytes": 1295498,
+      "sha256": "1ada47cb539dc1ce82d98d0eb084f4921e30725c82598bc7c4973e322beae4c4",
+      "auth_image_http": 200
+    }
+  ],
+  "dual_worker_identity_verified": true,
+  "simultaneous_gpu_utilization_observed": "GPU0=100%, GPU1=100% during same sample",
+  "receipt_sha256_verified": true,
+  "private_storage_sha256_verified": true,
+  "local_authenticated_image_http": 200,
+  "browser_https_visual_acceptance": "PENDING",
+  "new_jobs_generated": 2,
+  "no_retries": true,
+  "no_historical_milestone_modified": true
+}
