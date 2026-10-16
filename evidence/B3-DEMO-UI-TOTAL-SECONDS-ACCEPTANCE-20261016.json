@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "scope": "Public HTTPS Vue Studio, existing completed jobs only, no GPU submit",
+  "completed_rows": 6,
+  "rows_with_total_seconds": 6,
+  "javascript_errors": [],
+  "image_view": "PASS",
+  "download_visible": true
+}
