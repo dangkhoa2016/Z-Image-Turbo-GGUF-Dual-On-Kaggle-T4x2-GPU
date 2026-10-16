@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "job_id": "1999da90-dcbf-4a5c-b021-6d9014265f68",
+  "worker": 0,
+  "sha256": "8e17bb3bcb5af7a0bcdf52a5ea745bcc896304718c7bf7ef7d076d165b746b88",
+  "png_bytes": 1240684,
+  "dimensions": [
+    1024,
+    1024
+  ],
+  "view": true,
+  "download_link": true,
+  "js_errors": [],
+  "new_jobs_submitted": 0
+}
