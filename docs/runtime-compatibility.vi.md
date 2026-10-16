@@ -4,7 +4,7 @@
 
 ## Môi trường tham chiếu đã kiểm chứng
 
-Z-Image-Turbo GGUF Q6_K đã chạy thực tế trên **Kaggle Tesla T4 ×2**, với giai đoạn mã hóa prompt có giới hạn trên GPU0 và worker inference độc lập ở GPU0/GPU1. Nghiệm thu đầu-cuối trước đây bao gồm gửi prompt từ trình duyệt đã xác thực, nhận PNG 1024 × 1024, kiểm tra SHA256 và View/Download. Xem chỉ mục bằng chứng để biết chính xác phạm vi từng lần xác minh.
+Z-Image-Turbo GGUF Q6_K đã chạy thực tế trên **Kaggle Tesla T4 ×2**, với giai đoạn mã hóa prompt có giới hạn trên GPU0 và worker inference độc lập ở GPU0/GPU1. Nghiệm thu đầu-cuối trước đây bao gồm gửi prompt từ trình duyệt đã xác thực, nhận PNG 1024 × 1024, kiểm tra SHA256 và View/Download. Xem [chỉ mục bằng chứng](evidence-index.vi.md) để biết chính xác phạm vi từng lần xác minh.
 
 ## Khởi chạy trên Kaggle
 
@@ -19,4 +19,4 @@ Repo chứa mã nguồn và notebook khởi chạy, không phân phối weights,
 
 ## Xem thêm
 
-[Cấu hình trình diễn](deployment-profile.vi.md) · [Kiến trúc](architecture.vi.md) · [Hướng dẫn Kaggle](kaggle.vi.md) · Bằng chứng kỹ thuật
+[Cấu hình trình diễn](deployment-profile.vi.md) · [Kiến trúc](architecture.vi.md) · [Hướng dẫn Kaggle](kaggle.vi.md) · [Bằng chứng kỹ thuật](evidence-index.vi.md)

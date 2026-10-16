@@ -4,7 +4,7 @@
 
 ## Validated reference environment
 
-Z-Image-Turbo GGUF Q6_K has been exercised on **Kaggle Tesla T4 ×2** using a bounded GPU0 prompt-encoding phase and independent GPU0/GPU1 inference workers. Previous end-to-end acceptance includes authenticated browser submission, 1024 × 1024 PNG delivery, SHA256 integrity, and image View/Download. See the technical evidence index for the exact artifacts and their verification scope.
+Z-Image-Turbo GGUF Q6_K has been exercised on **Kaggle Tesla T4 ×2** using a bounded GPU0 prompt-encoding phase and independent GPU0/GPU1 inference workers. Previous end-to-end acceptance includes authenticated browser submission, 1024 × 1024 PNG delivery, SHA256 integrity, and image View/Download. See the [technical evidence index](evidence-index.md) for the exact artifacts and their verification scope.
 
 ## Launch on Kaggle
 
@@ -19,4 +19,4 @@ The repo supplies source and launch orchestration; it deliberately does not dist
 
 ## Further reading
 
-[Deployment profile](deployment-profile.md) · [Architecture](architecture.md) · [Kaggle guide](kaggle.md) · Technical evidence
+[Deployment profile](deployment-profile.md) · [Architecture](architecture.md) · [Kaggle guide](kaggle.md) · [Technical evidence](evidence-index.md)
