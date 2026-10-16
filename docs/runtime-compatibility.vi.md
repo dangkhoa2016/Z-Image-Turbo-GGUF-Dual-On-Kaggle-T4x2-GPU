@@ -19,4 +19,4 @@ Repo chứa mã nguồn và notebook khởi chạy, không phân phối weights,
 
 ## Xem thêm
 
-Cấu hình trình diễn · [Kiến trúc](architecture.vi.md) · [Hướng dẫn Kaggle](kaggle.vi.md) · Bằng chứng kỹ thuật
+[Cấu hình trình diễn](deployment-profile.vi.md) · [Kiến trúc](architecture.vi.md) · [Hướng dẫn Kaggle](kaggle.vi.md) · Bằng chứng kỹ thuật

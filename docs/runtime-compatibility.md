@@ -19,4 +19,4 @@ The repo supplies source and launch orchestration; it deliberately does not dist
 
 ## Further reading
 
-Deployment profile · [Architecture](architecture.md) · [Kaggle guide](kaggle.md) · Technical evidence
+[Deployment profile](deployment-profile.md) · [Architecture](architecture.md) · [Kaggle guide](kaggle.md) · Technical evidence
