@@ -17,8 +17,18 @@ def main():
  ck("model_file_present",Path(model["gguf_path"]).is_file())
  ck("support_files_present",Path(support["support_root"]).is_dir())
  ck("expected_q6k",model.get("variation")=="q6-k")
- try:d=im.version("diffusers")
- except im.PackageNotFoundError:d=None
+ vendor_dirs=[ROOT/"production-system"/n for n in ("vendor-shim","vendor-hub128","vendor-diffusers041","vendor-torchao015","vendor-gguf")]
+ vendor_env=os.environ.copy()
+ vendor_env["PYTHONPATH"]=os.pathsep.join([str(x) for x in vendor_dirs]+([vendor_env["PYTHONPATH"]] if vendor_env.get("PYTHONPATH") else []))
+ verifier=ROOT/"scripts"/"verify_vendor_runtime.py"
+ try:
+  v=subprocess.run([sys.executable,str(verifier)],env=vendor_env,capture_output=True,text=True,timeout=90)
+  ck("vendored_runtime_identity",v.returncode==0,(v.stdout if v.returncode==0 else v.stderr)[-1000:])
+ except Exception as e:ck("vendored_runtime_identity",False,type(e).__name__+": "+str(e))
+ try:
+  deps=subprocess.run([sys.executable,"-c","import importlib.metadata as m;print(m.version('diffusers'))"],env=vendor_env,capture_output=True,text=True,timeout=20)
+  d=deps.stdout.strip() if deps.returncode==0 else None
+ except Exception:d=None
  ck("diffusers_0_41_0",d=="0.41.0",d)
  try:
   import torch

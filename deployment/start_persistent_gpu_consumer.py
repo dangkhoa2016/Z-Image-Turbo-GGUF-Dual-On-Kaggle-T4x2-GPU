@@ -17,6 +17,12 @@ env=os.environ.copy()
 env.update(ZIMAGE_B1_DB=str(run/"api.sqlite3"),ZIMAGE_B1_API_KEY=cfg["service_key"],
  ZIMAGE_B3_TENANTS_JSON=json.dumps({"studio_demo":cfg["api_token"]}),ZIMAGE_B3_ARTIFACT_ROOT=str(run/"private"),
  PYTHONPATH=":".join(str(root/x) for x in ("vendor-shim","vendor-hub128","vendor-diffusers041","vendor-torchao015","vendor-gguf")))
+# Fail before spawning a persistent worker if imports or wheel metadata are shadowed.
+audit=subprocess.run([sys.executable,str(root.parent/"scripts"/"verify_vendor_runtime.py")],
+                     env=env,capture_output=True,text=True,timeout=120)
+if audit.returncode:
+ raise RuntimeError("Vendor runtime verification failed before GPU worker launch: "+audit.stderr[-1000:])
+print("GPU_CONSUMER_VENDOR_GATE=PASS")
 with (run/"persistent-gpu-consumer.log").open("ab") as log:
  p=subprocess.Popen([sys.executable,str(root/"b3-demo-studio-20261016/demo_consumer.py"),
  "--run-root",str(run),"--private-root",str(run/"private"),"--enable-gpu","--poll","2","--batch-wait","25"],
