@@ -7,7 +7,7 @@
 The project offers two separate HTTPS experiences for a Kaggle T4 ×2 showcase:
 
 - **Generation Studio:** the approved Vue interface provides an authenticated prompt-to-image workflow, queued/running/completed status, a loading animation, total job elapsed time, and PNG View/Download. The Cloudflare tunnel points to the password-protected gateway on port `18789`, not the internal API on `18788`.
-- **Benchmark galleries:** a separate static server presents the original **48-image and 122-image** gallery sites. The original HTML and corresponding image assets are supplied separately to `/kaggle/working/gallery-48` and `/kaggle/working/gallery-122`; they are not distributed in the source repository. The Pilot32 quality-review set is not a replacement for either gallery.
+- **Benchmark galleries:** a separate static server presents the original **48-image and 122-image** gallery sites. The original HTML and corresponding image assets are provided separately as optional showcase inputs; they are not distributed in the source repository. The Pilot32 quality-review set is not a replacement for either gallery.
 
 ## Operational profile
 

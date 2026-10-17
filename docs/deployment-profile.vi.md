@@ -7,7 +7,7 @@
 Dự án cung cấp hai website HTTPS tách biệt cho Kaggle T4 ×2:
 
 - **Generation Studio:** giao diện Vue đã nghiệm thu cho luồng nhập prompt → tạo ảnh, trạng thái queued/running/completed, hiệu ứng loading, tổng thời gian xử lý và View/Download PNG. Cloudflare tunnel trỏ tới gateway có mật khẩu ở cổng `18789`, không trỏ trực tiếp tới API nội bộ ở cổng `18788`.
-- **Gallery benchmark:** webserver HTML tĩnh riêng để hiển thị **gallery gốc 48 ảnh và 122 ảnh**. HTML và file ảnh tương ứng được cung cấp độc lập tại `/kaggle/working/gallery-48` và `/kaggle/working/gallery-122`, không kèm trong Git repository. Bộ kiểm tra chất lượng Pilot32 không thể thay thế hai gallery này.
+- **Gallery benchmark:** webserver HTML tĩnh riêng để hiển thị **gallery gốc 48 ảnh và 122 ảnh**. HTML và file ảnh tương ứng được cung cấp riêng dưới dạng tài nguyên trình diễn tùy chọn, không kèm trong Git repository. Bộ kiểm tra chất lượng Pilot32 không thể thay thế hai gallery này.
 
 ## Hồ sơ vận hành
 

@@ -3,7 +3,7 @@
 > 🌐 Language / Ngôn ngữ: **English** | [Tiếng Việt](troubleshooting.vi.md)
 
 ## Notebook refuses to start
-Check T4×2 accelerator, exact Kaggle input model+dataset versions, Internet access for initial vendor restoration, and existing /kaggle/working directory. A leftover runtime that is incomplete is intentionally not overwritten.
+Check T4×2 accelerator, exact Kaggle input model+dataset versions, Internet access for initial vendor restoration, and an accessible notebook working directory. A leftover runtime that is incomplete is intentionally not overwritten.
 
 ## Missing original galleries
 Provide original index.html and 48/122 images in the two expected folders; Pilot32 contains only 32 images and must not be misrepresented.
