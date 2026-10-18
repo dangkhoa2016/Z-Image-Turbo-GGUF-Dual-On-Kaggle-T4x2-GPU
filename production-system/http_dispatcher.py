@@ -1,7 +1,7 @@
-"""B1.4 isolated HTTP dispatcher for B1 SQLite and B1.3 verified PNG adapter.
+"""SQLite-backed HTTP dispatcher with verified PNG receipts.
 CPU tests use HTTP mocks. No arbitrary-text encoder, no GPU assertion.
 """
-import os,time,sqlite3,threading,uuid,fcntl
+import os,time,sqlite3,threading,uuid,fcntl,math
 from pathlib import Path
 from contextlib import closing
 from worker_adapter import WorkerAdapter
@@ -11,6 +11,11 @@ LOCK=DB.with_suffix(".http-dispatcher.lock")
 def prepare_http():
  prepare()
  with closing(connect()) as c:
+  # Additive timing receipts; older completed jobs are intentionally not backfilled.
+  c.execute("""CREATE TABLE IF NOT EXISTS job_generation_timings (
+    job_id TEXT PRIMARY KEY,worker_id INTEGER NOT NULL,
+    output_sha256 TEXT NOT NULL,generation_seconds REAL NOT NULL CHECK(generation_seconds>0),
+    recorded_at REAL NOT NULL)""")
   c.execute("""CREATE TABLE IF NOT EXISTS b14_artifacts (
     job_id TEXT PRIMARY KEY,worker_id INTEGER NOT NULL,path TEXT NOT NULL,
     sha256 TEXT NOT NULL,created_at REAL NOT NULL)""")
@@ -77,6 +82,12 @@ class Dispatcher:
      if n:
       c.execute("INSERT INTO b14_artifacts(job_id,worker_id,path,sha256,created_at) VALUES(?,?,?,?,?)",
         (job["id"],slot,result["output_path"],result["output_sha256"],time.time()))
+      # Commit measured generation time alongside a verified PNG, never at claim time.
+      seconds=result.get("seconds")
+      if isinstance(seconds,(float,int)) and not isinstance(seconds,bool) and math.isfinite(seconds) and seconds>0:
+       c.execute("""INSERT INTO job_generation_timings
+         (job_id,worker_id,output_sha256,generation_seconds,recorded_at)
+         VALUES(?,?,?,?,?)""",(job["id"],slot,result["output_sha256"],float(seconds),time.time()))
       event(c,job["id"],"HTTP_PNG_VERIFIED")
      else:event(c,job["id"],"HTTP_STALE_RESULT_REJECTED")
      c.execute("COMMIT")
@@ -122,4 +133,4 @@ class Dispatcher:
    with closing(connect()) as c:
     return {"states":{r[0]:r[1] for r in c.execute("SELECT state,COUNT(*) FROM jobs GROUP BY state")},
       "verified_artifacts":c.execute("SELECT COUNT(*) FROM b14_artifacts").fetchone()[0],
-      "execution":"HTTP_INTEGRATION_CPU_MOCK"}
+      "execution":"HTTP_VERIFIED_DISPATCH"}

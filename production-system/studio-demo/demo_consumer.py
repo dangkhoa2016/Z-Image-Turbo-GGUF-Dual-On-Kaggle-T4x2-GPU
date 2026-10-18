@@ -10,7 +10,10 @@ sys.path.insert(0,str(SRC))
 sys.path.insert(0,str(B3))
 from worker_receipt_bridge import publish_archived
 
+from lifecycle_schema import ensure_session_schema
+
 def publish_previous(db_path,private_root,output_root):
+    ensure_session_schema(db_path)
     published=[];skipped=[]
     with sqlite3.connect("file:"+str(db_path)+"?mode=ro",uri=True) as c:
         rows=c.execute("SELECT session_id FROM b112_sessions WHERE status='ARCHIVED' ORDER BY created_at").fetchall()

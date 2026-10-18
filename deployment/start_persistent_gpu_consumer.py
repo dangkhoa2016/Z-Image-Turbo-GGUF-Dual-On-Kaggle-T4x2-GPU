@@ -7,6 +7,9 @@ if pidfile.exists():
  old=int(pidfile.read_text())
  try:os.kill(old,0);raise RuntimeError("Existing persistent consumer PID "+str(old))
  except ProcessLookupError:pass
+sys.path.insert(0, str(root))
+from lifecycle_schema import ensure_session_schema
+ensure_session_schema(run/"api.sqlite3")
 with sqlite3.connect(run/"api.sqlite3") as db:
  assert db.execute("pragma integrity_check").fetchone()[0]=="ok"
  assert db.execute("select count(*) from jobs where state in ('running','uncertain')").fetchone()[0]==0

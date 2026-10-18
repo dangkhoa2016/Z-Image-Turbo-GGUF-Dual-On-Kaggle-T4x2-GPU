@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main]
+    branches: [main, 'release/**']
   pull_request:
 permissions:
   contents: read
@@ -13,12 +13,19 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
+      - name: Install CPU test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ci.txt
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Validate Python syntax and notebook cells without GPU
         run: |
           python - <<'PY'
           import ast,json,pathlib
-          for f in pathlib.Path('production-system').rglob('*.py'):
-              ast.parse(f.read_text(encoding='utf-8'),filename=str(f))
+          for root in ('production-system','scripts','deployment'):
+              for f in pathlib.Path(root).rglob('*.py'):
+                  if 'vendor-' in str(f) or '__pycache__' in str(f): continue
+                  ast.parse(f.read_text(encoding='utf-8'),filename=str(f))
           for f in pathlib.Path('notebooks').glob('*.ipynb'):
               b=json.loads(f.read_text(encoding='utf-8'))
               for i,c in enumerate(b['cells']):
@@ -55,3 +62,7 @@ jobs:
               assert 'local-secrets' not in lower,name
           print('TRACKED_ARTIFACT_POLICY=PASS')
           PY
+      - name: Scan tracked files for accidental secrets
+        run: python scripts/scan_secrets.py
+      - name: Run CPU test suite (process-isolated, no GPU)
+        run: python scripts/run_cpu_tests.py
