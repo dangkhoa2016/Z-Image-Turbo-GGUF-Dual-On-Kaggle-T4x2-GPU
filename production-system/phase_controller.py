@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""B1.6 guarded batch phase coordinator. CPU mock test and future Kaggle GPU0.
+"""Guarded encoding-to-inference phase coordinator with separate CPU mock and Kaggle GPU 0 modes.
 Does not launch inference workers: it releases an explicit verified gate only.
 """
 import os,sys,json,time,uuid,subprocess,fcntl,hashlib,argparse

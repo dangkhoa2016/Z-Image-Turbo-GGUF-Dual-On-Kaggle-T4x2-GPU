@@ -1,4 +1,4 @@
-"""B1.3 CPU-tested HTTP worker adapter, for isolated Kaggle T4x2 integration.
+"""Loopback HTTP worker adapter with identity and artifact integrity checks.
 Accepts only loopback worker endpoints and verifies real PNG bytes on disk.
 NOT wired to the production dispatcher; do not use to claim live inference.
 """

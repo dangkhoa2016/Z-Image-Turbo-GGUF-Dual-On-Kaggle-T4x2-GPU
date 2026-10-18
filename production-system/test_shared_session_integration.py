@@ -1,4 +1,4 @@
-"""B1.13 shared freeze + scoped dispatch, CPU mock only."""
+"""CPU integration tests for frozen session scope and dispatch via mock workers."""
 import os,tempfile,secrets,json,threading,hashlib,sqlite3
 from pathlib import Path
 from http.server import ThreadingHTTPServer,BaseHTTPRequestHandler
@@ -7,9 +7,9 @@ from fastapi.testclient import TestClient
 with tempfile.TemporaryDirectory(prefix="b16-test-b113close-") as td:
  root=Path(td);os.environ["ZIMAGE_B16_TEST_ROOT"]=td;os.environ["ZIMAGE_B1_DB"]=str(root/"api.sqlite3")
  os.environ["ZIMAGE_B1_API_KEY"]=secrets.token_urlsafe(36)
- import b113_admission as admission
- from b113_shared_lifecycle import SharedLifecycle
- from b113_scoped_dispatcher import ScopedDispatcher
+ import queue_admission as admission
+ from shared_session_lifecycle import SharedLifecycle
+ from scoped_dispatcher import ScopedDispatcher
  from worker_adapter import WorkerAdapter
  api=TestClient(admission.app);h={"Authorization":"Bearer "+os.environ["ZIMAGE_B1_API_KEY"]}
  for n,p in enumerate(("A luminous paper lantern floating on a lake","An old green bicycle in a studio"),11):
@@ -51,4 +51,4 @@ with tempfile.TemporaryDirectory(prefix="b16-test-b113close-") as td:
   assert c.execute("SELECT COUNT(*) FROM jobs WHERE state='queued'").fetchone()[0]==1
   assert c.execute("SELECT COUNT(*) FROM b113_active_prompts").fetchone()[0]==0
   assert c.execute("SELECT COUNT(*) FROM b113_session_jobs").fetchone()[0]==2
- print("B113_CPU_INTEGRATION_PASS frozen=2 verified=2 late_unrelated_queued=1 same_prompt_423=true mock_only=true")
+ print("SHARED_SESSION_CPU_INTEGRATION_PASS frozen=2 verified=2 late_unrelated_queued=1 same_prompt_423=true mock_only=true")

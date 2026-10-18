@@ -1,4 +1,4 @@
-"""B1.13 session-scoped dispatcher. Additive; old dispatcher unchanged."""
+"""Session-scoped dispatcher preserving existing dispatcher contracts."""
 from contextlib import closing
 from http_dispatcher import Dispatcher,connect
 class ScopedDispatcher(Dispatcher):
@@ -25,7 +25,7 @@ class ScopedDispatcher(Dispatcher):
       lease_owner=?,lease_deadline=?,updated_at=? WHERE id=? AND state='queued'""",
       (slot,self.owner,time.time()+self.lease,time.time(),row["id"])).rowcount
     if n!=1:raise RuntimeError("lost session claim")
-    event(c,row["id"],f"B113_SESSION_CLAIM_{slot}")
+    event(c,row["id"],f"SESSION_CLAIM_{slot}")
     c.execute("COMMIT");return dict(row)
    except BaseException:c.execute("ROLLBACK");raise
  def drain(self,timeout=15):

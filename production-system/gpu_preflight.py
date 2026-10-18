@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""B1.9 GPU T4x2 preflight. Read-only. Never starts inference."""
+"""Read-only Kaggle T4x2 GPU preflight; does not launch inference."""
 import argparse,importlib.metadata as im,json,os,shutil,subprocess,sys
 from pathlib import Path
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 def main():
  p=argparse.ArgumentParser()
  p.add_argument("--expect-gpu",action="store_true",help="Fail closed unless 2 T4 visible")

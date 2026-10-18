@@ -1,6 +1,6 @@
 from pathlib import Path
 import sqlite3,shutil
-root=Path("/kaggle/working/zimage-dual/production-system")
+root=(Path(__file__).resolve().parents[1]/"production-system")
 src=root/"b115-restore-with-png-v2-20261015"
 fixture=root/"b115-synthetic-crash-20261015"
 assert not fixture.exists()

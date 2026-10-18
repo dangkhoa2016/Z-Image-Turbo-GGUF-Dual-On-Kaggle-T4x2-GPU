@@ -1,4 +1,4 @@
-"""B3 read-only bridge from B1.14/B1.13 ARCHIVED GPU receipts to private Store.
+"""Read-only bridge from archived GPU receipts into the private artifact store.
 
 No inference; never changes worker, legacy SQLite, session status, or artifact receipts.
 Requires explicit b3_job_owner mapping recorded at authenticated job admission.
@@ -27,7 +27,7 @@ def safe_read_worker_file(filename,slot,output_root):
 def publish_archived(db_path,store_root,output_root,session_id):
     """Fail closed before publication unless every frozen job and receipt is consistent."""
     try:
-        if str(uuid.UUID(session_id))==session_id:raise RuntimeError("invalid B1.13 session ID")
+        if str(uuid.UUID(session_id))==session_id:raise RuntimeError("invalid archived session ID")
     except (ValueError,TypeError,AttributeError):pass
     if not session_id.startswith("b112-") or len(session_id)>80:
         raise RuntimeError("invalid session ID")
@@ -69,7 +69,7 @@ def publish_archived(db_path,store_root,output_root,session_id):
         receipt=store.put(job,owner,raw)
         if receipt["sha256"]!=digest:raise RuntimeError("store digest mismatch")
         published.append({"job_id":job,"sha256":digest,"idempotent":receipt["idempotent"]})
-    return {"status":"B3_ARCHIVED_GPU_RECEIPT_PUBLICATION_PASS","session_id":session_id,
+    return {"status":"PRIVATE_ARTIFACT_PUBLICATION_PASS","session_id":session_id,
             "published":len(published),"results":published,"gpu_inference":"NOT_RUN",
             "legacy_database_mutation":False}
 

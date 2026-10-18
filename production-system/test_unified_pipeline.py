@@ -1,4 +1,4 @@
-"""B1.8 real localhost HTTP CPU mock E2E, isolated temporary DB/cache."""
+"""End-to-end CPU integration test with loopback mock workers and isolated temporary state."""
 import os,tempfile,secrets,json,time,threading,hashlib
 from pathlib import Path
 from http.server import ThreadingHTTPServer,BaseHTTPRequestHandler
@@ -79,8 +79,8 @@ with tempfile.TemporaryDirectory(prefix="b16-test-b18-") as td:
   try:pipeline.dispatch()
   except RuntimeError:pass
   else:raise AssertionError("tampered cache accepted")
-  print("B18_CPU_E2E_PASS API queued prompts encoding_subprocess READY manifest 2_HTTP_workers valid_PNG_SHA256 cancellation no_replay tamper_rejected")
-  print("B18_PEAK_HTTP_WORKERS="+str(stats["peak"]))
-  print("B18_GPU_INFERENCE=NOT_TESTED")
+  print("PIPELINE_CPU_INTEGRATION_PASS API queued prompts encoding_subprocess READY manifest 2_HTTP_workers valid_PNG_SHA256 cancellation no_replay tamper_rejected")
+  print("PEAK_HTTP_WORKERS="+str(stats["peak"]))
+  print("GPU_INFERENCE=NOT_TESTED")
  finally:
   for srv in servers:srv.shutdown();srv.server_close()

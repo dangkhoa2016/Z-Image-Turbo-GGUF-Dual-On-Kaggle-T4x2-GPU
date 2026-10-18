@@ -1,7 +1,9 @@
 import os,json,subprocess,sys,sqlite3
 from pathlib import Path
-root=Path("/kaggle/working/zimage-dual/production-system")
-run=root/"b3-studio-demo-live-20261016"
+root=(Path(__file__).resolve().parents[1]/"production-system")
+run=Path(os.environ.get("ZIMAGE_STUDIO_RUN_ROOT",str(root/"b3-studio-demo-live-20261016"))).resolve()
+if not run.is_relative_to(root) or not (run/"api.sqlite3").is_file():
+ raise RuntimeError("Existing project-local Studio database required")
 pidfile=run/"persistent-gpu-consumer.pid"
 if pidfile.exists():
  old=int(pidfile.read_text())

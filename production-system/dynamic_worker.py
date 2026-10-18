@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""B1.7 isolated GPU worker — untested with real T4x2, not a production signoff."""
+"""Isolated T4 GPU inference worker with verified prompt embeddings and per-worker CUDA isolation."""
 import argparse,hashlib,json,os,time,threading
 from pathlib import Path
 from fastapi import FastAPI,HTTPException
@@ -18,7 +18,7 @@ from safetensors.torch import load_file
 from diffusers import ZImagePipeline,ZImageTransformer2DModel,GGUFQuantizationConfig,AutoencoderKL,FlowMatchEulerDiscreteScheduler
 if torch.cuda.device_count()!=1 or "T4" not in torch.cuda.get_device_name(0):raise RuntimeError("one logical T4 required")
 CACHE=read_manifest(args.manifest)["entries"]
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 M=json.loads((ROOT/"manifests/model.json").read_text())
 S=json.loads((ROOT/"manifests/support.json").read_text())
 support=Path(S["support_root"])
@@ -30,7 +30,7 @@ vae=AutoencoderKL.from_pretrained(str(support),subfolder="vae",torch_dtype=torch
 scheduler=FlowMatchEulerDiscreteScheduler.from_pretrained(str(support),subfolder="scheduler",local_files_only=True)
 pipe=ZImagePipeline(transformer=transformer,vae=vae,scheduler=scheduler,text_encoder=None,tokenizer=None)
 lock=threading.Lock()
-app=FastAPI(title="ZImage B1.7 dynamic worker")
+app=FastAPI(title="Z-Image GPU Inference Worker")
 class Job(BaseModel):
  prompt_id:str=Field(min_length=64,max_length=64)
  seed:int=Field(ge=0,le=4294967295)

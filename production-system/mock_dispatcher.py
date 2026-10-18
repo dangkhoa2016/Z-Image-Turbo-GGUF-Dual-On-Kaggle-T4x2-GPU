@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""B1.2 CPU-only, isolated dual-slot dispatcher; no GPU inference or PNG output.
+"""CPU-only dual-slot test dispatcher; does not run GPU inference or write generated PNGs.
 
 Uses the B1 API SQLite schema, added mock-only receipts and lease columns.
 Fail closed: an expired running task becomes UNCERTAIN, never automatically retried.

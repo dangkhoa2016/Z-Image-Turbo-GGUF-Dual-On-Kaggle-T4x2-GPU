@@ -1,9 +1,9 @@
-"""B1.13 integrated shared-DB session controller. Additive; no historical mutation."""
+"""Shared-database session controller with additive state and preserved historical records."""
 import hashlib,json,os,subprocess,sys,time,uuid
 from contextlib import closing
 from pathlib import Path
 from PIL import Image
-from b112_lifecycle import Lifecycle,require,RolloverBlocked
+from session_lifecycle import Lifecycle,require,RolloverBlocked
 from http_dispatcher import connect
 from embedding_registry import Registry
 from dynamic_manifest import export_manifest,read_manifest
@@ -132,7 +132,7 @@ class SharedLifecycle(Lifecycle):
      c.execute("UPDATE b112_sessions SET status='DISPATCHING',updated_at=? WHERE session_id=? AND status='READY'",(time.time(),sid))
     outcome=dispatch_cb(sid,prepared)
     archived=self.finish(sid)
-    return {"status":"B113_SESSION_ARCHIVED","prepare":prepared,"dispatch":outcome,"archive":archived}
+    return {"status":"SESSION_ARCHIVED","prepare":prepared,"dispatch":outcome,"archive":archived}
    except BaseException:
     with closing(connect()) as c:
      c.execute("UPDATE b112_sessions SET status='BLOCKED',updated_at=? WHERE session_id=? AND status!='ARCHIVED'",(time.time(),sid))

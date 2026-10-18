@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Bounded auto-queue consumer. Uses B1.13 lifecycle and B1.14 supervisor, fail-closed."""
+"""Bounded queue consumer using the shared session lifecycle and fail-closed GPU supervisor."""
 import argparse,fcntl,importlib.metadata as md,json,os,sys,time,traceback
 from pathlib import Path
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"production-system"
 sys.path.insert(0,str(SRC))
-from b113_shared_lifecycle import SharedLifecycle
-from b114_shared_gpu_supervisor import run as gpu_run
+from shared_session_lifecycle import SharedLifecycle
+from shared_gpu_supervisor import run as gpu_run
 from http_dispatcher import connect
 def main():
  a=argparse.ArgumentParser()

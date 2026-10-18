@@ -1,4 +1,4 @@
-"""B3 private artifact boundary, CPU-only. NOT an off-host durable store or HTTP endpoint."""
+"""private artifact boundary, CPU-only. NOT an off-host durable store or HTTP endpoint."""
 from pathlib import Path
 from io import BytesIO
 from PIL import Image

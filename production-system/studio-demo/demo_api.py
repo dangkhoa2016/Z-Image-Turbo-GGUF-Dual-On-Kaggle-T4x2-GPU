@@ -1,12 +1,12 @@
-"""Single-tenant Studio Vue v3 compatibility against verified private B3 artifact API.
-Internal localhost only. Do not expose legacy service.app or B1.13 app simultaneously.
+"""Single-tenant Vue Studio gateway backed by the private artifact API.
+Loopback-only service. Never expose parallel admission routes or backend credentials.
 """
 from pathlib import Path
 import sys
 from fastapi import Depends,HTTPException
 HERE=Path(__file__).resolve().parent
-B3=HERE.parent/"private-artifact-store"
-sys.path.insert(0,str(B3))
+PRIVATE_STORE=HERE.parent/"private-artifact-store"
+sys.path.insert(0,str(PRIVATE_STORE))
 import tenant_api as t
 
 app=t.app

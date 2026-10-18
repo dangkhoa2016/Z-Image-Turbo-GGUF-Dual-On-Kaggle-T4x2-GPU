@@ -1,4 +1,4 @@
-"""B1.5 CPU cache planning/state; encoder and inference are NOT executed here."""
+"""CPU-side embedding registry and cache state. Encoding and inference execute in separate processes."""
 import hashlib,json,os,sqlite3,time,uuid
 from pathlib import Path
 from contextlib import closing

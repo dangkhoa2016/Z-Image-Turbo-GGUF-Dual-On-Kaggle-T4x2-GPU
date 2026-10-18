@@ -1,4 +1,4 @@
-"""B1.4 CPU-only actual loopback HTTP mock servers, B1 API, dual dispatcher and PNG validation."""
+"""CPU HTTP integration tests with loopback mock workers, job API and PNG validation."""
 import os,tempfile,secrets,time,threading,json,sqlite3
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
@@ -88,8 +88,8 @@ with tempfile.TemporaryDirectory(prefix="b14-http-") as td:
   hd.Dispatcher(adapters).drain()
   assert c.get("/v1/jobs/"+unencoded,headers=headers).json()["state"]=="queued"
   with hd.connect() as db:assert db.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
-  print("B14_CPU_HTTP_E2E_PASS API SQLite dual_local_HTTP_mock PNG_SHA256 2_slots restart_no_replay bad_SHA_uncertain stale_failclosed unmapped_prompt_queued")
-  print("B14_MAX_SIMULTANEOUS_HTTP_WORKERS="+str(state["peak"]))
-  print("B14_REAL_GPU_INFERENCE=NOT_TESTED")
+  print("HTTP_INTEGRATION_CPU_PASS API SQLite dual_local_HTTP_mock PNG_SHA256 2_slots restart_no_replay bad_SHA_uncertain stale_failclosed unmapped_prompt_queued")
+  print("MAX_SIMULTANEOUS_HTTP_WORKERS="+str(state["peak"]))
+  print("REAL_GPU_INFERENCE=NOT_TESTED")
  finally:
   for srv in servers:srv.shutdown();srv.server_close()

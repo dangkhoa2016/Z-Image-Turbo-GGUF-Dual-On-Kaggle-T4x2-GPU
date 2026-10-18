@@ -1,4 +1,4 @@
-"""B1.6 CPU process boundary: encode batch, verify, idempotent replay, fail-closed mock."""
+"""CPU tests for batch encoding boundaries, verification, idempotence and fail-closed behavior."""
 import os,tempfile,json,subprocess,sys,sqlite3
 from pathlib import Path
 from embedding_registry import Registry
@@ -33,5 +33,5 @@ with tempfile.TemporaryDirectory(prefix="b16-test-") as tmp:
  blocked=json.loads((root/"b16-phase-status.json").read_text())
  assert blocked["status"]=="BLOCKED" and blocked["inference_workers_started"] is False
  # CPU never launched the real Qwen3 encoder or inference workers.
- print("B16_CPU_PROCESS_PASS subprocess bounded_batch dedupe READY_gate restart checksum_corruption_BLOCKED")
- print("B16_GPU_ENCODER=NOT_TESTED; INFERENCE_WORKERS=NOT_STARTED")
+ print("ENCODER_PROCESS_CPU_PASS subprocess bounded_batch dedupe READY_gate restart checksum_corruption_BLOCKED")
+ print("GPU_ENCODER=NOT_TESTED; INFERENCE_WORKERS=NOT_STARTED")

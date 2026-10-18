@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""B1.11 bounded Kaggle T4x2 inference-session supervisor.
+"""Bounded Kaggle T4x2 inference-session supervisor.
 
 Runs only a separately prepared REAL manifest/session. Default is dry-run.
 No historical DB mutation, no automatic retry of uncertain jobs, no public HTTP.
 """
 import argparse,json,os,signal,socket,subprocess,sys,time,urllib.request
 from pathlib import Path
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"production-system"
 def ensure(condition,message):
  if not condition:raise RuntimeError(message)
@@ -41,7 +41,7 @@ def execute(a):
  ensure(states.get("running",0)==0 and states.get("uncertain",0)==0,"unresolved running/uncertain jobs")
  ensure(states.get("queued",0)>0,"no queued jobs: refusing needless GPU start")
  ensure(states.get("queued",0)<=a.max_jobs,"queued bound exceeded")
- evidence={"status":"B111_CHECKS_PASS","session":str(run),"real_prompt_ids":len(entries),"queued_jobs":states["queued"],
+ evidence={"status":"INFERENCE_SESSION_PREFLIGHT_PASS","session":str(run),"real_prompt_ids":len(entries),"queued_jobs":states["queued"],
            "startup":"NOT_STARTED","dispatch":"NOT_STARTED"}
  if not a.run:
   print(json.dumps(evidence,sort_keys=True));return 0
@@ -77,7 +77,7 @@ def execute(a):
   evidence["dispatch"]=outcome
   ensure(outcome["states"].get("completed",0)==states.get("completed",0)+states["queued"],"some pending jobs not completed")
   ensure(outcome["verified_artifacts"]>=states["queued"],"artifact verification count mismatch")
-  evidence["status"]="B111_MANAGED_INFERENCE_SESSION_PASS"
+  evidence["status"]="INFERENCE_SESSION_COMPLETE"
   print(json.dumps(evidence,sort_keys=True),flush=True)
   return 0
  finally:
@@ -102,6 +102,6 @@ def main():
  ensure(30<=a.ready_timeout<=900 and 30<=a.dispatch_timeout<=3600 and 1<=a.max_jobs<=32,"invalid bounds")
  try:return execute(a)
  except Exception as e:
-  print(f"B111_BLOCKED={type(e).__name__}: {e}",file=sys.stderr,flush=True)
+  print(f"INFERENCE_SESSION_BLOCKED={type(e).__name__}: {e}",file=sys.stderr,flush=True)
   return 2
 if __name__=="__main__":sys.exit(main())

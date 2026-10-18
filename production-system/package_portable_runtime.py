@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Additive B1.10 portable source+state+evidence checkpoint, no credentials or old DB."""
+"""Portable packaging of source, isolated state and evidence; excludes credentials and unrelated databases."""
 import hashlib,json,sqlite3,importlib.metadata as md,zipfile,tempfile,os
 from pathlib import Path
-root=Path("/kaggle/working/zimage-dual")
+root=Path(__file__).resolve().parents[1]
 src=root/"production-system"
 run=src/"gpu-integration-20261015"
 out=Path("/kaggle/working/ZIMAGE-DUAL-B110-SOURCE-STATE-GPU-EVIDENCE-20261015-V2.zip")
@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix="zimage-b110-",dir="/kaggle/working") as
   include(p)
  for item in report["jobs"]:
   include(Path(item["png_path"]))
- meta={"scope":"B1.10 source+new-state+GPU artifacts only; excludes historical full archive/model weights/secrets",
+ meta={"scope":"Source, new session state and GPU artifacts only; excludes historical archives, model weights and secrets",
        "hardware":"Kaggle Tesla T4x2","production_acceptance":"PENDING",
        "dependencies":{n:md.version(n) for n in ("torch","diffusers","transformers","huggingface_hub","torchao","gguf")}}
  with zipfile.ZipFile(out,"x",zipfile.ZIP_DEFLATED,compresslevel=6) as z:
@@ -44,5 +44,5 @@ digest=hashlib.sha256(out.read_bytes()).hexdigest()
 Path(str(out)+".sha256").write_text(digest+"  "+out.name+"\n")
 with zipfile.ZipFile(out) as z:
  assert z.testzip() is None
- print(json.dumps({"status":"B110_PORTABLE_INTEGRITY_PASS","files":len(z.namelist()),
+ print(json.dumps({"status":"PORTABLE_PACKAGE_INTEGRITY_PASS","files":len(z.namelist()),
                    "bytes":out.stat().st_size,"sha256":digest,"archive":str(out)},sort_keys=True))

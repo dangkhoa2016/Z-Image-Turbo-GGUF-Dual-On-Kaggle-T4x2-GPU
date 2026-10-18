@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""B1.6 bounded dynamic Qwen3 encoder subprocess — Kaggle T4 GPU0 ONLY.
+"""Bounded Qwen3 text-encoding subprocess for Kaggle GPU 0.
 Never started by the CPU test. No GPU hardware means fail closed.
 """
 import argparse,gc,importlib.metadata,json,os,sys,time,uuid,hashlib
@@ -26,7 +26,7 @@ def main():
  from diffusers import ZImagePipeline
  if torch.cuda.device_count()!=1 or "T4" not in torch.cuda.get_device_name(0):
   raise RuntimeError("One logical NVIDIA T4 required for encoder phase")
- root=Path("/kaggle/working/zimage-dual")
+ root=Path(__file__).resolve().parents[1]
  support=json.loads((root/"manifests/support.json").read_text())
  identity={"support_manifest_sha256":support["manifest_sha256"],"diffusers_version":importlib.metadata.version("diffusers"),
            "max_sequence_length":512,"text_encoder_dtype":"bfloat16"}

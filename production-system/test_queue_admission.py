@@ -1,12 +1,12 @@
-"""B1.13 atomic admission/session snapshot contract; no GPU."""
+"""CPU tests for atomic queue admission and session snapshots; no GPU execution."""
 import os,secrets,tempfile,sqlite3
 from pathlib import Path
 from fastapi.testclient import TestClient
 with tempfile.TemporaryDirectory(prefix="b16-test-b113-") as td:
  os.environ["ZIMAGE_B1_DB"]=str(Path(td)/"jobs.sqlite3")
  os.environ["ZIMAGE_B1_API_KEY"]=secrets.token_urlsafe(36)
- import b113_admission as a
- from b113_scoped_dispatcher import ScopedDispatcher
+ import queue_admission as a
+ from scoped_dispatcher import ScopedDispatcher
  client=TestClient(a.app);h={"Authorization":"Bearer "+os.environ["ZIMAGE_B1_API_KEY"]}
  def submit(p,seed,key=None):
   headers=dict(h)
@@ -29,4 +29,4 @@ with tempfile.TemporaryDirectory(prefix="b16-test-b113-") as td:
   assert x==1
   assert c.execute("SELECT COUNT(*) FROM jobs WHERE state='queued'").fetchone()[0]==3
  assert submit("Moonlit mountain forest",99,"idempotent-111").status_code==409
- print("B113_ADMISSION_CONTRACT_PASS same_prompt_blocked=423 unrelated_prompt_queued=201 idempotency_preserved=PASS snapshot_job_count=1")
+ print("QUEUE_ADMISSION_CPU_PASS same_prompt_blocked=423 unrelated_prompt_queued=201 idempotency_preserved=PASS snapshot_job_count=1")

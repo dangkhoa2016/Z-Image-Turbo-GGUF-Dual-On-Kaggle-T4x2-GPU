@@ -1,13 +1,13 @@
-"""B1.13 local-only admission API for shared SQLite.
+"""Local-only queue admission API for shared SQLite.
 
-Use THIS app for POST /v1/jobs while B1.13 lifecycle is enabled.
+Use this API for POST /v1/jobs with shared-session safeguards enabled.
 The legacy service.app bypasses this admission gate; do not expose it concurrently.
 """
 import hmac,sqlite3,time,uuid
 from fastapi import FastAPI,Depends,Header,HTTPException
 import service
 
-app=FastAPI(title="Z-Image B1.13 guarded admission",version="0.1.13-cpu-contract")
+app=FastAPI(title="Z-Image Queue Admission API",version="1.0.0")
 DB=service.DB
 def connection():
  c=sqlite3.connect(DB,timeout=15,isolation_level=None)

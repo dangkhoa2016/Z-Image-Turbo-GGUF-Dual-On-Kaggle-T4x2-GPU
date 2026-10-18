@@ -1,4 +1,4 @@
-"""Kaggle T4x2 B1 CPU control plane, real GPU inference NOT CONNECTED."""
+"""SQLite-backed job control plane. GPU inference runs in separate isolated workers."""
 import os,sqlite3,time,uuid,hmac,threading
 from pathlib import Path
 from fastapi import FastAPI,Header,HTTPException,Depends,Query

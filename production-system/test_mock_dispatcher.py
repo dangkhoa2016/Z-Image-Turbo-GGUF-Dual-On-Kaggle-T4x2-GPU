@@ -58,6 +58,6 @@ with tempfile.TemporaryDirectory(prefix="zimage-b12-") as td:
  res4=md.Dispatcher(worker=spare).run_until_idle()
  assert c.get("/v1/jobs/"+newer,headers=h).json()["state"]=="completed"
  assert spare.calls[0][1]==1,spare.calls
- print("B12_MOCK_PASS dual_parallel_slots restart_no_replay fail_closed manual_retry recovery spare_worker sqlite_integrity")
- print("B12_REAL_GPU_INFERENCE=NOT_TESTED")
- print("B12_REAL_PNG_OUTPUTS=0")
+ print("MOCK_DISPATCH_PASS dual_parallel_slots restart_no_replay fail_closed manual_retry recovery spare_worker sqlite_integrity")
+ print("REAL_GPU_INFERENCE=NOT_TESTED")
+ print("REAL_PNG_OUTPUTS=0")

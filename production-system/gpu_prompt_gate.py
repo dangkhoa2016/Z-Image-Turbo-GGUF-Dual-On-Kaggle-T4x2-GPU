@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""B1.10 isolated, real-GPU two-prompt encoding gate. Does NOT start workers."""
+"""Verified two-prompt GPU encoding gate; does not start inference workers."""
 import os,secrets,json,importlib.metadata as md
 from pathlib import Path
 from fastapi.testclient import TestClient
 from hashlib import sha256
 from uuid import uuid4
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 RUN=ROOT/"production-system"/"gpu-integration-20261015"
 RUN.mkdir(exist_ok=True)
 os.environ["ZIMAGE_B1_DB"]=str(RUN/"api.sqlite3")

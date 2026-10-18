@@ -2,7 +2,7 @@
 """Idempotent CPU-only local Studio/API resume. Never starts the GPU consumer."""
 import json,os,subprocess,sys,time,urllib.request,sqlite3,fcntl
 from pathlib import Path
-BASE=Path("/kaggle/working/zimage-dual")
+BASE=Path(__file__).resolve().parents[1]
 SRC=BASE/"production-system"
 RUN=SRC/"b3-studio-demo-live-20261016"
 with (RUN/"local-restart.lock").open("a+") as lf:

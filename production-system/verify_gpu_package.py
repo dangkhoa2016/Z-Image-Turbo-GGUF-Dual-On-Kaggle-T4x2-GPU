@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Package verified B1.14 source, SQLite snapshot and new real GPU artifacts."""
+"""Package verified real-GPU source, SQLite snapshot and image artifacts."""
 import hashlib,json,sqlite3,zipfile,tempfile
 from pathlib import Path
 from PIL import Image
-root=Path("/kaggle/working/zimage-dual")
+root=Path(__file__).resolve().parents[1]
 src=root/"production-system"
 run=src/"b114-real-gpu-acceptance-20261015"
 result=json.loads((run/"b114-acceptance-result.json").read_text())
-assert result["status"]=="B113_SESSION_ARCHIVED"
+assert result["status"]=="SESSION_ARCHIVED"
 assert result["archive"]["verified_png"]==2
 with sqlite3.connect(f"file:{run/'api.sqlite3'}?mode=ro",uri=True) as c:
  c.row_factory=sqlite3.Row
@@ -30,11 +30,11 @@ with sqlite3.connect(f"file:{run/'api.sqlite3'}?mode=ro",uri=True) as c:
   j=next(x for x in jobs if x["id"]==a["job_id"])
   assert sha==a["sha256"]==j["output_sha256"] and a["worker_id"]==j["worker_id"]
   verified.append({"worker":a["worker_id"],"png":str(p),"size":p.stat().st_size,"sha256":sha})
-report={"status":"B114_REAL_SHARED_DB_DUAL_GPU_E2E_PASS","frozen_jobs":2,"verified_png":verified,
+report={"status":"DUAL_GPU_INTEGRATION_PASS","frozen_jobs":2,"verified_png":verified,
         "sqlite_archived":True,"gpu_supervisor_auto_cleanup":True,"production_go":"PENDING"}
 (run/"b114-final-verify.json").write_text(json.dumps(report,indent=2)+"\n")
 files=[]
-for name in ["b114_shared_gpu_supervisor.py","b114_acceptance.py","b113_admission.py","b113_scoped_dispatcher.py","b113_shared_lifecycle.py"]:
+for name in ["shared_gpu_supervisor.py","gpu_acceptance.py","queue_admission.py","scoped_dispatcher.py","shared_session_lifecycle.py"]:
  files.append(src/name)
 for p in run.rglob("*"):
  if p.is_file() and p.name not in ("api.sqlite3","api.sqlite3-wal","api.sqlite3-shm") and not p.name.endswith((".lock","-wal","-shm")):
@@ -53,4 +53,4 @@ with tempfile.TemporaryDirectory(prefix="b114-snapshot-",dir="/kaggle/working") 
 with zipfile.ZipFile(out) as z:assert z.testzip() is None
 sha=hashlib.sha256(out.read_bytes()).hexdigest()
 Path(str(out)+".sha256").write_text(sha+"  "+out.name+"\n")
-print("B114_PACKAGE_PASS",json.dumps({"archive":str(out),"bytes":out.stat().st_size,"sha256":sha,"png":verified},sort_keys=True))
+print("GPU_ACCEPTANCE_PACKAGE_PASS",json.dumps({"archive":str(out),"bytes":out.stat().st_size,"sha256":sha,"png":verified},sort_keys=True))

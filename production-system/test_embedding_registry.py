@@ -1,4 +1,4 @@
-"""B1.5 CPU registry tests; synthetic embeddings only (never actual text encoding)."""
+"""CPU embedding-registry tests using synthetic tensors only, without model encoding."""
 import tempfile,hashlib,json,sqlite3
 from pathlib import Path
 import torch
@@ -44,5 +44,5 @@ with tempfile.TemporaryDirectory(prefix="zimage-b15-") as td:
  assert r.claim("new-encoder-444")["status"]=="pending"
  # No codec-specific artifacts exposed from registry test
  with sqlite3.connect(root/"new-registry.sqlite3") as c:assert c.execute("PRAGMA integrity_check").fetchone()[0]=="ok"
- print("B15_CPU_REGISTRY_PASS identity_hash dedupe ownership verified_safetensors SHA256 corruption_detection uncertain_expired")
- print("B15_ACTUAL_TEXT_ENCODING=NOT_TESTED GPU=NOT_USED")
+ print("EMBEDDING_REGISTRY_CPU_PASS identity_hash dedupe ownership verified_safetensors SHA256 corruption_detection uncertain_expired")
+ print("ACTUAL_TEXT_ENCODING=NOT_TESTED GPU=NOT_USED")

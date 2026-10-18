@@ -2,17 +2,17 @@
 """Bounded Studio-origin GPU run: queue -> encoding -> dual T4 -> receipt. Never replay on failure."""
 import os,sys,json,time,importlib.metadata as md,urllib.request,sqlite3
 from pathlib import Path
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"production-system"
 sys.path.insert(0,str(SRC))
-RUN=SRC/"studio-live-20261015-v3"
+RUN=SRC/"studio-live-20261015-v2"
 DB=RUN/"api.sqlite3"
 assert os.getenv("ZIMAGE_B1_DB")==str(DB)
-from b113_shared_lifecycle import SharedLifecycle
+from shared_session_lifecycle import SharedLifecycle
 support=json.loads((ROOT/"manifests/support.json").read_text())
 identity={"support_manifest_sha256":support["manifest_sha256"],"diffusers_version":md.version("diffusers"),"max_sequence_length":512,"text_encoder_dtype":"bfloat16"}
 def callback(sid,prepared):
- from b114_shared_gpu_supervisor import run
+ from shared_gpu_supervisor import run
  print("STUDIO_GPU_WORKER_LAUNCH",sid,flush=True)
  result=run(sid,DB,RUN/"sessions",ROOT/"output",300,1800,True)
  print("STUDIO_GPU_DISPATCH",json.dumps(result,sort_keys=True),flush=True)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""B1.12 additive session ledger / bounded API queue rollover.
-No changes to historical jobs, B1-B1.11 modules or PASS evidence.
+"""Session ledger and bounded API queue rollover with additive state transitions.
+Preserve historical jobs, existing database tables, and verified evidence.
 CPU mock works only under /tmp/b16-test-*; real GPU requires an explicit runner.
 """
 import fcntl,hashlib,json,os,sqlite3,time,uuid
@@ -169,7 +169,7 @@ class Lifecycle:
    try:
     result=run_dispatch(pipeline,sid)
     archived=self.finalize(sid)
-    return {"status":"B112_SESSION_ARCHIVED","prepare":prepared,"dispatch":result,"archive":archived}
+    return {"status":"SESSION_ARCHIVED","prepare":prepared,"dispatch":result,"archive":archived}
    except BaseException:
     with closing(connect()) as c:
      c.execute("UPDATE b112_sessions SET status='BLOCKED',updated_at=? WHERE session_id=? AND status!='ARCHIVED'",(time.time(),sid))

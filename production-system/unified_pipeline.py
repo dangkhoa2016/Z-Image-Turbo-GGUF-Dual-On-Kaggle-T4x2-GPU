@@ -1,4 +1,4 @@
-"""B1.8 two-phase API -> encoding -> READY manifest -> dual HTTP dispatcher.
+"""Two-phase pipeline: job API, verified embeddings, inference manifest and dual HTTP workers.
 
 Safety properties:
 - New separate SQLite and cache locations, unchanged historical files.

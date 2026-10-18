@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""B1.15 offline portable checkpoint and fail-closed restore; Kaggle-only paths."""
+"""Offline portable checkpoint recovery with fail-closed restore and Kaggle-local paths."""
 import argparse,hashlib,json,os,sqlite3,tempfile,zipfile
 from pathlib import Path
-ROOT=Path("/kaggle/working/zimage-dual/production-system")
+ROOT=(Path(__file__).resolve().parents[1]/"production-system")
 def sha(p):
  h=hashlib.sha256()
  with open(p,"rb") as f:
@@ -33,7 +33,7 @@ def checkpoint(source,out):
     for old,digest,slot in receipts:
      pic=Path(old)
      guard(slot in (0,1) and pic.is_file() and not pic.is_symlink() and sha(pic)==digest,"PNG receipt verification failure")
-     guard(pic.parent==Path("/kaggle/working/zimage-dual/output")/f"worker-{slot}","PNG outside output root")
+     guard(pic.parent==(Path(__file__).resolve().parents[1]/"output")/f"worker-{slot}","PNG outside output root")
      files[f"restored-artifacts/worker-{slot}/{pic.name}"]=pic
   manifest={"schema":"zimage-b115-checkpoint-v1" ,"source_subdir":source.name,
             "files":{k:{"sha256":sha(v),"size":v.stat().st_size} for k,v in sorted(files.items())}}
@@ -42,7 +42,7 @@ def checkpoint(source,out):
    for name,p in files.items():z.write(p,"payload/"+name)
  with zipfile.ZipFile(out) as z:guard(z.testzip() is None,"invalid zip")
  digest=sha(out);Path(str(out)+".sha256").write_text(digest+"  "+out.name+"\n")
- return {"status":"B115_CHECKPOINT_PASS","files":len(files),"bytes":out.stat().st_size,"sha256":digest}
+ return {"status":"RECOVERY_CHECKPOINT_CREATED","files":len(files),"bytes":out.stat().st_size,"sha256":digest}
 def restore(archive,dest):
  archive=Path(archive).resolve(strict=True);dest=Path(dest).resolve()
  guard(dest.is_relative_to(ROOT) and not dest.exists(),"destination must be new within project")
@@ -78,12 +78,12 @@ def restore(archive,dest):
     sessions=dict(c.execute("SELECT status,COUNT(*) FROM b112_sessions GROUP BY status")) if c.execute("SELECT 1 FROM sqlite_master WHERE name='b112_sessions'").fetchone() else {}
    # NO implicit reset of running, frozen mappings, sessions, or leases. An operator must reconcile.
    blocked=any(jobs.get(x,0) for x in ("running","uncertain","failed")) or any(sessions.get(x,0) for x in ("PREPARING","READY","DISPATCHING","BLOCKED"))
-   gate={"status":"B115_RESTORE_QUARANTINED" if blocked else "B115_RESTORE_DATA_VERIFIED",
+   gate={"status":"RESTORE_QUARANTINED" if blocked else "RESTORE_DATA_VERIFIED",
          "automatic_inference_resume":False,"artifacts_restored":len(list((dest/"restored-artifacts").rglob("*.png"))),"jobs":jobs,"sessions":sessions,"source_archive":str(archive)}
-   (dest/"B115-RESTORE-GATE.json").write_text(json.dumps(gate,indent=2)+"\n")
+   (dest/"restore-gate.json").write_text(json.dumps(gate,indent=2)+"\n")
    return gate
   except BaseException:
-   (dest/"B115-INCOMPLETE-DO-NOT-RUN").write_text("Restore failed; quarantine this directory.\n")
+   (dest/"restore-incomplete-do-not-run.txt").write_text("Restore failed; quarantine this directory.\n")
    raise
 def main():
  p=argparse.ArgumentParser();sub=p.add_subparsers(dest="command",required=True)
@@ -95,5 +95,5 @@ def main():
 if __name__=="__main__":
  try:main()
  except Exception as e:
-  print("B115_BLOCKED "+type(e).__name__+": "+str(e),flush=True)
+  print("PORTABLE_RECOVERY_BLOCKED "+type(e).__name__+": "+str(e),flush=True)
   raise SystemExit(2)

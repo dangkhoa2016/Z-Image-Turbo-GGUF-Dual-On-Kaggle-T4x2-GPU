@@ -28,5 +28,5 @@ with tempfile.TemporaryDirectory(prefix="b17-test-") as td:
  try:read_manifest(manifest,allow_mock=True)
  except RuntimeError:pass
  else:raise AssertionError("corrupted cache accepted")
- print("B17_CPU_MANIFEST_PASS ready_registry trusted_provenance_mock_isolation checksum_rejection")
- print("B17_REAL_GPU_INFERENCE=NOT_TESTED")
+ print("MANIFEST_VALIDATION_CPU_PASS ready_registry trusted_provenance_mock_isolation checksum_rejection")
+ print("REAL_GPU_INFERENCE=NOT_TESTED")

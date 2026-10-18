@@ -1,13 +1,13 @@
-"""B3 demo queue consumer: preserves B1.13/B1.14 lifecycle and publishes archived GPU PNGs.
+"""Studio queue consumer that uses the shared session lifecycle and publishes verified private GPU PNGs.
 CPU-only --reconcile-only is the DEFAULT, no GPU models/workers started.
 """
 import argparse,fcntl,json,os,sqlite3,sys,time,traceback
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
 SRC=HERE.parent
-B3=SRC/"private-artifact-store"
+PRIVATE_STORE=SRC/"private-artifact-store"
 sys.path.insert(0,str(SRC))
-sys.path.insert(0,str(B3))
+sys.path.insert(0,str(PRIVATE_STORE))
 from worker_receipt_bridge import publish_archived
 
 from lifecycle_schema import ensure_session_schema
@@ -27,16 +27,16 @@ def publish_previous(db_path,private_root,output_root):
                 raise RuntimeError("partly owned archived session requires operator attention: "+sid)
             result=publish_archived(db_path,private_root,output_root,sid)
             published.append(result)
-    return {"status":"B3_ARCHIVED_SESSIONS_RECONCILED","published_sessions":published,
+    return {"status":"ARCHIVED_SESSIONS_RECONCILED","published_sessions":published,
             "unowned_legacy_sessions_skipped":skipped,"automatic_replay":False}
 
 def run_gpu_consumer(run_root,private_root,poll,batch_wait,once):
     # GPU-specific imports and dispatch happen ONLY with --enable-gpu explicitly provided.
     import importlib.metadata as md
-    from b113_shared_lifecycle import SharedLifecycle
-    from b114_shared_gpu_supervisor import run as gpu_dispatch
+    from shared_session_lifecycle import SharedLifecycle
+    from shared_gpu_supervisor import run as gpu_dispatch
     from http_dispatcher import connect
-    ROOT=Path("/kaggle/working/zimage-dual")
+    ROOT=Path(__file__).resolve().parents[2]
     db=run_root/"api.sqlite3"
     support=json.loads((ROOT/"manifests/support.json").read_text())
     identity={"support_manifest_sha256":support["manifest_sha256"],
@@ -46,7 +46,7 @@ def run_gpu_consumer(run_root,private_root,poll,batch_wait,once):
                          identity=identity,mode="gpu0",max_prompts=2,max_jobs=4)
     def dispatch(sid,prepared):
         return gpu_dispatch(sid,db,run_root/"sessions",ROOT/"output",300,1800,True)
-    print("B3_DEMO_CONSUMER_READY",flush=True)
+    print("STUDIO_CONSUMER_READY",flush=True)
     while True:
         publish_previous(db,private_root,ROOT/"output")
         with connect() as c:
@@ -57,7 +57,7 @@ def run_gpu_consumer(run_root,private_root,poll,batch_wait,once):
                 result=life.run_one(dispatch)
                 sid=result["archive"]["session_id"]
                 private_result=publish_archived(db,private_root,ROOT/"output",sid)
-                print("B3_GPU_AND_PRIVATE_PUBLICATION",json.dumps({"session_id":sid,"private_receipts":private_result["published"]}),flush=True)
+                print("GPU_PRIVATE_PUBLICATION",json.dumps({"session_id":sid,"private_receipts":private_result["published"]}),flush=True)
         if once:break
         time.sleep(poll)
 
@@ -84,7 +84,7 @@ def main():
     with lock.open("a+") as fd:
         fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
         if not a.enable_gpu:
-            print(json.dumps(publish_previous(run_root/"api.sqlite3",private,Path("/kaggle/working/zimage-dual/output"))))
+            print(json.dumps(publish_previous(run_root/"api.sqlite3",private,(Path(__file__).resolve().parents[2]/"output"))))
             return
         run_gpu_consumer(run_root,private,a.poll,a.batch_wait,a.once)
 

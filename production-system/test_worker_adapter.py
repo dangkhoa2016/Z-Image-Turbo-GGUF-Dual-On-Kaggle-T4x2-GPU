@@ -57,5 +57,5 @@ with tempfile.TemporaryDirectory(prefix="zimage-b13-") as td:
  new=dict(base,png_sha256=hashlib.sha256(real.read_bytes()).hexdigest())
  with patch.object(wa.requests,"post",return_value=Reply(new)):
   fails(wa.WorkerProtocolError,lambda:adapter.generate("portrait_studio_v1",45))
- print("B13_CPU_ADAPTER_PASS loopback_fencing health identity output_path PNG_size SHA256 http_errors symlink")
- print("B13_HTTP=MOCK_ONLY; GPU_INFERENCE=NOT_TESTED")
+ print("WORKER_ADAPTER_CPU_PASS loopback_fencing health identity output_path PNG_size SHA256 http_errors symlink")
+ print("WORKER_HTTP=MOCK_ONLY; GPU_INFERENCE=NOT_TESTED")

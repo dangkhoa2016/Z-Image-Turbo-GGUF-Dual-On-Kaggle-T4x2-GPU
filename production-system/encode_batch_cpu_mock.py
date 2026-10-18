@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""B1.6 test-only encoder. Synthetic tensors must NEVER enter a real GPU worker."""
+"""Test-only CPU encoder using synthetic tensors. Synthetic embeddings must never reach real GPU workers."""
 import argparse,hashlib,json,os,uuid
 from pathlib import Path
 from embedding_registry import Registry

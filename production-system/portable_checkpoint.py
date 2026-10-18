@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""B1.16 isolated full portable snapshot + verified path relocation, never auto-replay."""
+"""Isolated portable checkpoint with verified path relocation and no automatic replay."""
 import argparse,hashlib,json,sqlite3,zipfile,tempfile
 from pathlib import Path
 from safetensors import safe_open
-ROOT=Path("/kaggle/working/zimage-dual/production-system")
+ROOT=(Path(__file__).resolve().parents[1]/"production-system")
 def h(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def ok(v,m):
  if not v:raise RuntimeError(m)
@@ -28,7 +28,7 @@ def pack(source,out):
    receipts=c.execute("SELECT path,sha256,worker_id FROM b14_artifacts").fetchall()
    for path,digest,slot in receipts:
     p=Path(path)
-    ok(slot in (0,1) and p.parent==Path(f"/kaggle/working/zimage-dual/output/worker-{slot}") and p.is_file() and h(p)==digest,"invalid PNG receipt")
+    ok(slot in (0,1) and p.parent==(Path(__file__).resolve().parents[1]/"output"/f"worker-{slot}") and p.is_file() and h(p)==digest,"invalid PNG receipt")
     files[f"restored-artifacts/worker-{slot}/{p.name}"]=p
   manifest={"schema":"zimage-b116-v3","files":{n:{"sha256":h(p),"size":p.stat().st_size} for n,p in sorted(files.items())}}
   with zipfile.ZipFile(out,"x",zipfile.ZIP_DEFLATED) as z:
@@ -36,7 +36,7 @@ def pack(source,out):
    for n,p in files.items():z.write(p,"payload/"+n)
  with zipfile.ZipFile(out) as z:ok(z.testzip() is None,"zip damaged")
  digest=h(out);Path(str(out)+".sha256").write_text(f"{digest}  {out.name}\n")
- return {"status":"B116_V3_PACK_PASS","files":len(files),"bytes":out.stat().st_size,"sha256":digest}
+ return {"status":"PORTABLE_CHECKPOINT_PASS","files":len(files),"bytes":out.stat().st_size,"sha256":digest}
 def restore(archive,dest):
  archive=Path(archive);dest=Path(dest)
  ok(dest.resolve().is_relative_to(ROOT) and not dest.exists(),"unsafe/existing restore dir")
@@ -83,9 +83,9 @@ def restore(archive,dest):
     c.commit()
    from dynamic_manifest import read_manifest
    read_manifest(mp,allow_mock=False)
-   gate={"status":"B116_RESTORE_VERIFIED_QUARANTINED" if jobs.get("running",0) or jobs.get("uncertain",0) or any(stages.get(x,0) for x in ("PREPARING","READY","DISPATCHING","BLOCKED")) else "B116_PORTABLE_RESTORE_PASS",
+   gate={"status":"RESTORE_VERIFIED_QUARANTINED" if jobs.get("running",0) or jobs.get("uncertain",0) or any(stages.get(x,0) for x in ("PREPARING","READY","DISPATCHING","BLOCKED")) else "PORTABLE_RESTORE_VERIFIED",
          "jobs":jobs,"sessions":stages,"registry_ready":len(manifest["entries"]),"automatic_replay":False}
-   (dest/"B116-RESTORE-GATE.json").write_text(json.dumps(gate,indent=2))
+   (dest/"restore-gate.json").write_text(json.dumps(gate,indent=2))
    return gate
   except BaseException:
    (dest/"DO-NOT-RUN-RESTORE-INCOMPLETE").write_text("FAIL CLOSED\n")
@@ -93,4 +93,4 @@ def restore(archive,dest):
 if __name__=="__main__":
  parser=argparse.ArgumentParser();parser.add_argument("action",choices=("pack","restore"));parser.add_argument("first");parser.add_argument("second");a=parser.parse_args()
  try:print(json.dumps(pack(a.first,a.second) if a.action=="pack" else restore(a.first,a.second),sort_keys=True))
- except Exception as e:print("B116_BLOCKED",type(e).__name__,str(e));raise SystemExit(2)
+ except Exception as e:print("PORTABLE_CHECKPOINT_BLOCKED",type(e).__name__,str(e));raise SystemExit(2)

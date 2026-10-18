@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""B1.14: shared SQLite scoped GPU workers, bounded and fail-closed."""
+"""Bounded, fail-closed shared-SQLite GPU worker supervisor."""
 import argparse,json,os,socket,subprocess,sys,time,urllib.request
 from pathlib import Path
 from contextlib import closing
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"production-system"
 def must(cond,reason):
  if not cond:raise RuntimeError(reason)
@@ -16,7 +16,7 @@ def health(i):
 def run(session_id,api_db,sessions_root,artifact_root,ready_timeout,dispatch_timeout,launch):
  os.environ["ZIMAGE_B1_DB"]=str(api_db)
  from http_dispatcher import connect
- from b113_scoped_dispatcher import ScopedDispatcher
+ from scoped_dispatcher import ScopedDispatcher
  from worker_adapter import WorkerAdapter,file_hash
  from dynamic_manifest import read_manifest
  folder=Path(sessions_root)/session_id
@@ -38,7 +38,7 @@ def run(session_id,api_db,sessions_root,artifact_root,ready_timeout,dispatch_tim
    sk.settimeout(.3)
    must(sk.connect_ex(("127.0.0.1",port))!=0,"worker TCP port already occupied")
  if not launch:
-  return {"status":"B114_SHARED_GPU_DRY_RUN_PASS","session_id":session_id,"frozen_jobs":len(frozen),"workers_started":False}
+  return {"status":"GPU_DRY_RUN_VALIDATED","session_id":session_id,"frozen_jobs":len(frozen),"workers_started":False}
  subprocess.run([sys.executable,str(SRC/"gpu_preflight.py"),"--expect-gpu","--manifest",str(manifest)],check=True,stdout=subprocess.DEVNULL)
  env=os.environ.copy();env["HF_HUB_OFFLINE"]="1";env["TRANSFORMERS_OFFLINE"]="1"
  logs=folder/"gpu-supervisor-logs";logs.mkdir(exist_ok=True)
@@ -61,7 +61,7 @@ def run(session_id,api_db,sessions_root,artifact_root,ready_timeout,dispatch_tim
    statuses=c.execute("SELECT j.state,COUNT(*) FROM jobs j JOIN b113_session_jobs sj ON sj.job_id=j.id WHERE sj.session_id=? GROUP BY j.state",(session_id,)).fetchall()
   status=dict(statuses)
   must(status.get("completed",0)+status.get("cancelled",0)==len(frozen),"frozen jobs not all terminal")
-  return {"status":"B114_GPU_DISPATCH_FINISHED","session_id":session_id,"frozen_jobs":len(frozen),"scoped_states":status,"dispatcher":result}
+  return {"status":"GPU_DISPATCH_FINISHED","session_id":session_id,"frozen_jobs":len(frozen),"scoped_states":status,"dispatcher":result}
  finally:
   for p in procs:
    if p.poll() is None:p.terminate()
@@ -74,7 +74,7 @@ def main():
  a.add_argument("--session-id",required=True)
  a.add_argument("--api-db",required=True)
  a.add_argument("--sessions-root",required=True)
- a.add_argument("--artifact-root",default="/kaggle/working/zimage-dual/output")
+ a.add_argument("--artifact-root",default=str(Path(__file__).resolve().parents[1]/"output"))
  a.add_argument("--run",action="store_true")
  a.add_argument("--ready-timeout",type=int,default=240)
  a.add_argument("--dispatch-timeout",type=int,default=1800)
@@ -84,10 +84,16 @@ def main():
  must(Path(x.api_db).resolve().is_relative_to(SRC),"API database must be isolated under production-system")
  must(Path(x.sessions_root).resolve().is_relative_to(SRC),"session root must be under production-system")
  must(Path(x.artifact_root).resolve()==ROOT/"output","artifact destination mismatch")
+ # The adapter demands an existing canonical root even before the first worker writes.
+ # Establish it only after all scope/identity checks and never follow a symlink.
+ target=ROOT/"output"
+ must(not target.is_symlink(),"artifact root symlink forbidden")
+ target.mkdir(mode=0o755,parents=False,exist_ok=True)
+ must(target.is_dir() and target.resolve(strict=True)==ROOT/"output","unsafe artifact root")
  print(json.dumps(run(x.session_id,Path(x.api_db),Path(x.sessions_root),Path(x.artifact_root),
   x.ready_timeout,x.dispatch_timeout,x.run),sort_keys=True),flush=True)
 if __name__=="__main__":
  try:main()
  except Exception as e:
-  print("B114_BLOCKED="+type(e).__name__+": "+str(e),file=sys.stderr,flush=True)
+  print("GPU_DISPATCH_BLOCKED="+type(e).__name__+": "+str(e),file=sys.stderr,flush=True)
   sys.exit(2)

@@ -1,6 +1,6 @@
 from pathlib import Path
 import os,secrets,json,subprocess,sys,urllib.request,time,signal
-ROOT=Path("/kaggle/working/zimage-dual")
+ROOT=Path(__file__).resolve().parents[2]
 PROD=ROOT/"production-system"
 RUN=PROD/"b3-studio-demo-live-20261016"
 assert not RUN.exists(),"Existing demo run: refuse overwrite"
