@@ -1,0 +1,28 @@
+{
+  "verification_date": "2026-10-18",
+  "scope": "Existing Kaggle T4x2 runtime; not a clean notebook replay",
+  "cpu_contracts": "PASS 17/17 in isolated source-only Git candidate",
+  "portable_dual_gpu": "PASS 2/2 1024x1024 PNG with independent SHA256 receipt verification",
+  "studio_authenticated_e2e": "PASS; browser View and Download plus prompt fidelity approved by user",
+  "studio_job_outcomes": {
+    "completed": 5,
+    "cancelled": 1
+  },
+  "new_studio_job_outcomes": {
+    "completed": 3,
+    "cancelled": 1
+  },
+  "measured_historical_gpu_diffusion_seconds": [
+    236,
+    247,
+    234,
+    246,
+    262
+  ],
+  "timing_disclosure": "Diffusion progress log is approximate 9-step processing only; end-to-end includes queuing, setup, encoding and saving. Historical full generation_seconds was not recorded.",
+  "pending": [
+    "Fresh Kaggle notebook replay from published source",
+    "New clean published-clone GPU and browser acceptance"
+  ],
+  "privacy": "Sanitized report: excludes prompts, job identifiers, private images, tokens, passwords and paths"
+}
