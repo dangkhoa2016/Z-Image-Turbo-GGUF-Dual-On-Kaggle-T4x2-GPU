@@ -1,0 +1,14 @@
+# CPU/CI test dependencies — the exact set scripts/run_cpu_tests.py needs on a
+# GPU-less host. Installed by .github/workflows/repository-audit.yml.
+#
+# GPU-only runtime packages (transformers, diffusers, accelerate, gguf, torchao)
+# and any PyTorch CUDA build are deliberately excluded: they belong to the
+# Kaggle T4 x2 lock recorded in manifests/runtime-compatibility.json and are
+# installed on the GPU host by scripts/bootstrap_vendor.py. A CPU wheel of
+# PyTorch is installed separately by the workflow from the CPU wheel index.
+fastapi
+httpx
+pillow
+safetensors
+requests
+numpy
