@@ -45,7 +45,8 @@ def run_gpu_consumer(run_root,private_root,poll,batch_wait,once):
     life=SharedLifecycle(api_db=db,sessions_root=run_root/"sessions",artifact_root=ROOT/"output",
                          identity=identity,mode="gpu0",max_prompts=2,max_jobs=4)
     def dispatch(sid,prepared):
-        return gpu_dispatch(sid,db,run_root/"sessions",ROOT/"output",300,1800,True)
+        # Cold GGUF Q6_K startup on Kaggle T4x2 can exceed five minutes before VAE is ready.
+        return gpu_dispatch(sid,db,run_root/"sessions",ROOT/"output",720,1800,True)
     print("STUDIO_CONSUMER_READY",flush=True)
     while True:
         publish_previous(db,private_root,ROOT/"output")
