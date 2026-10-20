@@ -13,6 +13,21 @@ def health(i):
    o=json.load(r)
   return o.get("ready") is True and o.get("worker_id")==i
  except Exception:return False
+def last_worker_stage(path):
+ if not path.is_file():return "NO_LOG"
+ try:
+  with path.open("rb") as stream:
+   stream.seek(max(0,path.stat().st_size-16384))
+   lines=stream.read().decode("utf-8",errors="replace").splitlines()
+  stages=[line[len("ZIMAGE_WORKER_STAGE "):] for line in lines
+          if line.startswith("ZIMAGE_WORKER_STAGE ")]
+  return json.loads(stages[-1])["stage"] if stages else "IMPORTING_OR_NO_STAGE"
+ except (OSError,ValueError,KeyError):return "LOG_UNAVAILABLE"
+def worker_rss_mib(pid):
+ try:
+  stat=next(line for line in open(f"/proc/{pid}/status") if line.startswith("VmRSS:"))
+  return round(int(stat.split()[1])/1024)
+ except (OSError,StopIteration,IndexError,ValueError):return None
 def run(session_id,api_db,sessions_root,artifact_root,ready_timeout,dispatch_timeout,launch):
  os.environ["ZIMAGE_B1_DB"]=str(api_db)
  from http_dispatcher import connect
@@ -49,12 +64,30 @@ def run(session_id,api_db,sessions_root,artifact_root,ready_timeout,dispatch_tim
    f=(logs/f"worker-{i}.log").open("a");handles.append(f)
    procs.append(subprocess.Popen([sys.executable,str(SRC/"dynamic_worker.py"),"--worker-id",str(i),
     "--port",str(12340+i),"--manifest",str(manifest)],cwd=SRC,env=e,stdout=f,stderr=subprocess.STDOUT,start_new_session=True))
-  until=time.monotonic()+ready_timeout
+  started=time.monotonic()
+  until=started+ready_timeout
+  next_report=started
   while time.monotonic()<until:
-   must(all(p.poll() is None for p in procs),"worker exited during startup")
-   if health(0) and health(1):break
+   for i,p in enumerate(procs):
+    if p.poll() is not None:
+     raise RuntimeError("GPU worker "+str(i)+" exited with code "+str(p.returncode)+
+      " at stage "+last_worker_stage(logs/f"worker-{i}.log"))
+   if health(0) and health(1):
+    print("GPU_WORKER_PAIR_READY "+json.dumps({"session_id":session_id,
+      "elapsed_seconds":round(time.monotonic()-started,2),
+      "worker_pids":[p.pid for p in procs]}),flush=True)
+    break
+   if time.monotonic()>=next_report:
+    details={str(i):{"pid":p.pid,"stage":last_worker_stage(logs/f"worker-{i}.log"),
+              "rss_mib":worker_rss_mib(p.pid)} for i,p in enumerate(procs)}
+    print("GPU_WORKER_STARTUP_PROGRESS "+json.dumps({"elapsed_seconds":
+      round(time.monotonic()-started,1),"workers":details},sort_keys=True),flush=True)
+    next_report=time.monotonic()+15
    time.sleep(2)
-  else:raise TimeoutError("dual GPU startup timeout")
+  else:
+   details={str(i):last_worker_stage(logs/f"worker-{i}.log") for i in (0,1)}
+   raise TimeoutError("dual GPU startup timeout after "+str(ready_timeout)+
+    "s; last stages="+json.dumps(details,sort_keys=True))
   adapters={i:WorkerAdapter(i,f"http://127.0.0.1:{12340+i}",artifact_root) for i in (0,1)}
   result=ScopedDispatcher(adapters,session_id).drain(timeout=dispatch_timeout)
   with closing(connect()) as c:

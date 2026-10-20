@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Isolated T4 GPU inference worker with verified prompt embeddings and per-worker CUDA isolation."""
-import argparse,hashlib,json,os,time,threading
+import argparse,hashlib,json,os,time,threading,sys
 from pathlib import Path
 from fastapi import FastAPI,HTTPException
 from pydantic import BaseModel,Field
@@ -10,27 +10,52 @@ parser.add_argument("--worker-id",type=int,required=True,choices=(0,1))
 parser.add_argument("--port",type=int,required=True)
 parser.add_argument("--manifest",required=True)
 args=parser.parse_args()
+STARTED_AT=time.monotonic()
+def stage(name,**details):
+ print("ZIMAGE_WORKER_STAGE "+json.dumps({
+  "worker_id":args.worker_id,"pid":os.getpid(),"stage":name,
+  "elapsed_seconds":round(time.monotonic()-STARTED_AT,2),**details
+ },sort_keys=True),flush=True)
+stage("PROCESS_START",cuda_visible=os.environ.get("CUDA_VISIBLE_DEVICES"))
 if args.port!=12340+args.worker_id:raise RuntimeError("port/slot mismatch")
 if os.environ.get("CUDA_VISIBLE_DEVICES")!=str(args.worker_id):raise RuntimeError("physical GPU isolation missing")
 if os.environ.get("HF_HUB_OFFLINE")!="1" or os.environ.get("TRANSFORMERS_OFFLINE")!="1":raise RuntimeError("offline mode required")
+stage("IMPORT_TORCH")
 import torch
+stage("TORCH_READY",torch_version=str(torch.__version__),cuda_version=str(torch.version.cuda))
 from safetensors.torch import load_file
+stage("IMPORT_DIFFUSERS")
 from diffusers import ZImagePipeline,ZImageTransformer2DModel,GGUFQuantizationConfig,AutoencoderKL,FlowMatchEulerDiscreteScheduler
+stage("DIFFUSERS_READY")
 if torch.cuda.device_count()!=1 or "T4" not in torch.cuda.get_device_name(0):raise RuntimeError("one logical T4 required")
+stage("CUDA_VISIBLE",device=torch.cuda.get_device_name(0))
 CACHE=read_manifest(args.manifest)["entries"]
 ROOT=Path(__file__).resolve().parents[1]
 M=json.loads((ROOT/"manifests/model.json").read_text())
 S=json.loads((ROOT/"manifests/support.json").read_text())
 support=Path(S["support_root"])
+stage("GGUF_LOAD_BEGIN",bytes=Path(M["gguf_path"]).stat().st_size)
 transformer=ZImageTransformer2DModel.from_single_file(M["gguf_path"],
  quantization_config=GGUFQuantizationConfig(compute_dtype=torch.bfloat16),
- config=str(support),subfolder="transformer",dtype=torch.bfloat16).to("cuda:0")
+ config=str(support),subfolder="transformer",dtype=torch.bfloat16)
+stage("GGUF_LOAD_FINISHED")
+stage("GGUF_TO_CUDA_BEGIN")
+transformer=transformer.to("cuda:0")
+stage("GGUF_ON_CUDA",allocated_mib=round(torch.cuda.memory_allocated()/1048576))
+stage("VAE_LOAD_BEGIN")
 vae=AutoencoderKL.from_pretrained(str(support),subfolder="vae",torch_dtype=torch.bfloat16,
- local_files_only=True).to("cuda:0");vae.enable_tiling()
+ local_files_only=True)
+stage("VAE_LOAD_FINISHED")
+vae=vae.to("cuda:0")
+vae.enable_tiling()
+stage("VAE_ON_CUDA",allocated_mib=round(torch.cuda.memory_allocated()/1048576))
 scheduler=FlowMatchEulerDiscreteScheduler.from_pretrained(str(support),subfolder="scheduler",local_files_only=True)
+stage("PIPELINE_ASSEMBLY_BEGIN")
 pipe=ZImagePipeline(transformer=transformer,vae=vae,scheduler=scheduler,text_encoder=None,tokenizer=None)
+stage("PIPELINE_READY",allocated_mib=round(torch.cuda.memory_allocated()/1048576))
 lock=threading.Lock()
 app=FastAPI(title="Z-Image GPU Inference Worker")
+stage("HTTP_APPLICATION_READY")
 class Job(BaseModel):
  prompt_id:str=Field(min_length=64,max_length=64)
  seed:int=Field(ge=0,le=4294967295)

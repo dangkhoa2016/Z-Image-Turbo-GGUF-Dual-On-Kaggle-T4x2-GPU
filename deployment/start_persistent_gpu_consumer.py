@@ -28,6 +28,12 @@ audit=subprocess.run([sys.executable,str(root.parent/"scripts"/"verify_vendor_ru
 if audit.returncode:
  raise RuntimeError("Vendor runtime verification failed before GPU worker launch: "+audit.stderr[-1000:])
 print("GPU_CONSUMER_VENDOR_GATE=PASS")
+probe=subprocess.run([sys.executable,str(root.parent/"scripts"/"validate_gpu_runtime_imports.py")],
+                     env=env,capture_output=True,text=True,timeout=150)
+print(probe.stdout[-2400:],flush=True)
+if probe.returncode:
+ raise RuntimeError("GPU_RUNTIME_IMPORT_SMOKE_FAILED: "+probe.stderr[-1800:])
+print("GPU_RUNTIME_IMPORT_GATE=PASS")
 with (run/"persistent-gpu-consumer.log").open("ab") as log:
  p=subprocess.Popen([sys.executable,str(root/"studio-demo/demo_consumer.py"),
  "--run-root",str(run),"--private-root",str(run/"private"),"--enable-gpu","--poll","2","--batch-wait","25"],
