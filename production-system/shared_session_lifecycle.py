@@ -51,11 +51,32 @@ class SharedLifecycle(Lifecycle):
   prompt_path=session/"b18-encoder-prompts.json"
   identity_path.write_text(json.dumps(self.identity,sort_keys=True))
   prompt_path.write_text(json.dumps(prompts,ensure_ascii=False))
-  proc=subprocess.run([sys.executable,str(Path(__file__).with_name("phase_controller.py")),
+  cmd=[sys.executable,str(Path(__file__).with_name("phase_controller.py")),
    "--db",str(regdb),"--cache-root",str(cache),"--identity",str(identity_path),
-   "--prompt-json",str(prompt_path),"--mode",self.mode,"--max-items",str(self.max_prompts)],
-   capture_output=True,text=True,timeout=3600)
-  if proc.returncode:raise RolloverBlocked("encoder phase failed: "+proc.stderr[-1000:])
+   "--prompt-json",str(prompt_path),"--mode",self.mode,"--max-items",str(self.max_prompts)]
+  if self.mode=="gpu0":
+   # capture_output concealed encoder progress for up to an hour while Studio
+   # appeared frozen at PREPARING. Persist bounded, append-only stage evidence.
+   import signal
+   log=folder/"encoder-phase.log"
+   with log.open("xb") as output:
+    child=subprocess.Popen(cmd,stdout=output,stderr=subprocess.STDOUT,
+                            start_new_session=True)
+    try:
+     rc=child.wait(timeout=1800)
+    except subprocess.TimeoutExpired:
+     if child.poll() is None:
+      os.killpg(child.pid,signal.SIGTERM)
+      try:child.wait(timeout=10)
+      except subprocess.TimeoutExpired:
+       os.killpg(child.pid,signal.SIGKILL)
+       child.wait(timeout=10)
+     raise RolloverBlocked("Studio GPU encoder exceeded 1800 seconds; log="+str(log))
+   if rc:
+    raise RolloverBlocked("Studio GPU encoder failed (exit="+str(rc)+"); log="+str(log))
+  else:
+   proc=subprocess.run(cmd,capture_output=True,text=True,timeout=3600)
+   if proc.returncode:raise RolloverBlocked("encoder phase failed: "+proc.stderr[-1000:])
   phase=json.loads((folder/"b16-phase-status.json").read_text())
   require(phase.get("status")=="READY_FOR_INFERENCE_START" and phase.get("mode")==self.mode,"encoder phase not READY")
   reg=Registry(regdb,cache,self.identity)
