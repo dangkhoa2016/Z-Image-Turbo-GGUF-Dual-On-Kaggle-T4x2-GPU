@@ -9,13 +9,18 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/"scripts"))
 from stage_gguf_model import stage_model, verify_staged_override, staged_path
 from inference_provenance import (
+    STUDIO_TMP_INFERENCE_FINGERPRINT,STUDIO_TMP_ENCODER_SUBSET_FINGERPRINT,
+    P22_QWEN3_STAGING_INFERENCE_FINGERPRINT, P22_QWEN3_STAGING_ENCODER_SUBSET_FINGERPRINT,
     ACCEPTED_INFERENCE_FINGERPRINT, STAGED_INFERENCE_FINGERPRINT, SELECTABLE_GGUF_INFERENCE_FINGERPRINT,
     ACCEPTED_ENCODER_SUBSET_FINGERPRINT, encoder_subset_fingerprint,
     inference_fingerprint, verify_cached_source,
 )
 
-assert inference_fingerprint(ROOT) == SELECTABLE_GGUF_INFERENCE_FINGERPRINT
-assert encoder_subset_fingerprint(ROOT) == ACCEPTED_ENCODER_SUBSET_FINGERPRINT
+assert inference_fingerprint(ROOT) == STUDIO_TMP_INFERENCE_FINGERPRINT
+assert encoder_subset_fingerprint(ROOT) == STUDIO_TMP_ENCODER_SUBSET_FINGERPRINT
+assert P22_QWEN3_STAGING_INFERENCE_FINGERPRINT != SELECTABLE_GGUF_INFERENCE_FINGERPRINT
+assert P22_QWEN3_STAGING_ENCODER_SUBSET_FINGERPRINT != ACCEPTED_ENCODER_SUBSET_FINGERPRINT
+
 assert STAGED_INFERENCE_FINGERPRINT != ACCEPTED_INFERENCE_FINGERPRINT
 # Previously accepted PNG reports must NOT be silently reused under altered worker source.
 try:
