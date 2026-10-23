@@ -5,6 +5,7 @@ Never started by the CPU test. No GPU hardware means fail closed.
 import argparse,gc,importlib.metadata,json,os,sys,time,uuid,hashlib
 from pathlib import Path
 from embedding_registry import Registry,hash_file
+from qwen3_staging import select_qwen3_source
 
 # Lightweight, read-only diagnostics. No GPU synchronizations or tensor copies.
 _ENCODER_STARTED=time.monotonic()
@@ -76,8 +77,28 @@ def main():
   encoder_stage("TOKENIZER_LOAD_BEGIN")
   tokenizer=AutoTokenizer.from_pretrained(str(support_root/"tokenizer"),local_files_only=True,use_fast=True)
   encoder_stage("TOKENIZER_LOAD_FINISHED")
+  qwen3_mode=os.environ.get("ZIMAGE_QWEN3_SOURCE_MODE", "direct")
+  qwen3_cache_root=Path(os.environ.get("ZIMAGE_QWEN3_STAGE_ROOT", "/kaggle/working/zimage-qwen3-stage"))
+  # Only controlled ephemeral roots are supported. The staging module still
+  # checks every path ancestor for symlinks, model hashes, and atomic writes.
+  allowed_roots=(Path("/kaggle/working"),Path("/tmp/zimage-t4x2-model-stage"))
+  if qwen3_mode in ("auto", "local") and not any(
+      qwen3_cache_root.is_relative_to(base) for base in allowed_roots):
+   raise RuntimeError("QWEN3_STAGE_ROOT_OUTSIDE_ALLOWED_CACHE_ROOT")
+  encoder_stage("QWEN3_SOURCE_SELECTION_BEGIN")
+  selected=select_qwen3_source(
+      support,
+      qwen3_cache_root,
+      mode=qwen3_mode,
+  )
+  encoder_stage("QWEN3_SOURCE_SELECTION_FINISHED",
+                requested_mode=selected["requested_mode"],
+                effective_mode=selected["effective_mode"],
+                integrity=selected["integrity"],
+                copied=selected["copied"],
+                selection_seconds=selected["selection_seconds"])
   encoder_stage("QWEN3_WEIGHTS_LOAD_BEGIN")
-  encoder=Qwen3Model.from_pretrained(str(support_root/"text_encoder"),torch_dtype=torch.bfloat16,
+  encoder=Qwen3Model.from_pretrained(selected["text_encoder_dir"],torch_dtype=torch.bfloat16,
                                    local_files_only=True,low_cpu_mem_usage=True)
   encoder_stage("QWEN3_WEIGHTS_LOAD_FINISHED")
   encoder_stage("QWEN3_CUDA_TRANSFER_BEGIN")

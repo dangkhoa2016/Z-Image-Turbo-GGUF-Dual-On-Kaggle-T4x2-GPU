@@ -42,7 +42,9 @@ staged_override=os.environ.get("ZIMAGE_GGUF_STAGED_PATH","").strip()
 if staged_override:
  from stage_gguf_model import verify_staged_override
  gguf_path=str(verify_staged_override(
-  M,Path(staged_override),Path("/kaggle/working/zimage-gguf-stage")))
+  M,Path(staged_override),
+  Path(os.environ.get("ZIMAGE_GGUF_STAGE_ROOT",
+                      "/kaggle/working/zimage-gguf-stage"))))
  stage("GGUF_LOCAL_STAGE_VERIFIED",path=gguf_path,bytes=Path(gguf_path).stat().st_size)
 stage("GGUF_LOAD_BEGIN",source="staged-local" if staged_override else "manifest",
       bytes=Path(gguf_path).stat().st_size)
