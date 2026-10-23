@@ -21,7 +21,7 @@ cfg=json.loads((run/"local-secrets.json").read_text())
 env=os.environ.copy()
 env.update(ZIMAGE_B1_DB=str(run/"api.sqlite3"),ZIMAGE_B1_API_KEY=cfg["service_key"],
  ZIMAGE_B3_TENANTS_JSON=json.dumps({"studio_demo":cfg["api_token"]}),ZIMAGE_B3_ARTIFACT_ROOT=str(run/"private"),
- PYTHONPATH=":".join(str(root/x) for x in ("vendor-shim","vendor-hub128","vendor-diffusers041","vendor-torchao015","vendor-gguf")))
+ PYTHONPATH=os.pathsep.join([str(root/x) for x in ("vendor-shim","vendor-hub128","vendor-diffusers041","vendor-torchao015","vendor-gguf")]+[str(root.parent/"scripts")]))
 # Fail before spawning a persistent worker if imports or wheel metadata are shadowed.
 audit=subprocess.run([sys.executable,str(root.parent/"scripts"/"verify_vendor_runtime.py")],
                      env=env,capture_output=True,text=True,timeout=120)
