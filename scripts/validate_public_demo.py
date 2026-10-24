@@ -27,8 +27,8 @@ def assert_relative_links(doc):
    assert (ROOT/path).is_file(),("Broken relative Markdown link",path)
 def validate():
  from markdown_language_switch import validate_docs_language_switches
- language_audit=validate_docs_language_switches(ROOT/'docs',expected_pairs=14)
- assert language_audit=={'pairs':14,'documents':28}
+ language_audit=validate_docs_language_switches(ROOT/'docs',expected_pairs=11)
+ assert language_audit=={'pairs':11,'documents':22}
  public=json.loads(NOTEBOOK.read_text(encoding="utf-8"))
  assert len(public["cells"])==28
  assert sum(c["cell_type"]=="code" for c in public["cells"])==12

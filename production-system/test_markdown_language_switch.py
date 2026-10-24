@@ -8,8 +8,8 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"scripts"))
 from markdown_language_switch import validate_docs_language_switches
 
-result=validate_docs_language_switches(ROOT/"docs",expected_pairs=14)
-assert result=={"pairs":14,"documents":28},result
+result=validate_docs_language_switches(ROOT/"docs",expected_pairs=11)
+assert result=={"pairs":11,"documents":22},result
 
 
 def expect_failure(folder, fragment):
@@ -41,5 +41,5 @@ with tempfile.TemporaryDirectory(prefix="zimage-markdown-lang-") as directory:
     en.write_text(en_ok)
     vi.unlink()
     expect_failure(docs,"Missing language")
-print("MARKDOWN_LANGUAGE_SWITCH_CPU_PASS docs=28 pairs=14 switch_exact "
+print("MARKDOWN_LANGUAGE_SWITCH_CPU_PASS docs=22 pairs=11 switch_exact "
       "both_directions legacy_rejected missing_peer_rejected malformed_rejected")

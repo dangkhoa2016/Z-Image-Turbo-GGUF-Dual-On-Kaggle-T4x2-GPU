@@ -1,4 +1,6 @@
-# Reproducible vendor dependencies (preview candidate)
+# Audited vendor dependencies for Kaggle
+
+> 🌐 Language / Ngôn ngữ: **English** | [Tiếng Việt](vendor-dependencies.vi.md)
 
 The repository is the source of project code. On Kaggle, the notebook clones this repository and runs `python3 scripts/bootstrap_vendor.py`. The script downloads SHA256-pinned third-party wheels from PyPI (internet required) or consumes previously downloaded wheels with `--wheel-dir PATH`. It verifies the complete wheel SHA256, extracted package tree, and upstream distribution metadata, including licenses.
 
@@ -6,7 +8,7 @@ Audited versions: Diffusers 0.41.0 (Apache-2.0), Hugging Face Hub 1.28.0 (Apache
 
 Native TorchAO wheel is platform-specific; the audited artifact is Linux x86_64 cp310-abi3. It is not a general cross-platform wheel guarantee. Version metadata from `importlib.metadata` must be read from the explicit vendored distribution paths, rather than blindly from system site-packages.
 
-The GGUF model and text-encoder/VAE support components are separate model data attachments, not source. The current technical preview is not production-ready. Full runtime dependency locking, fresh published-clone CI, GPU T4x2 replay and browser E2E are still pending.
+The GGUF model and text-encoder/VAE support components are separate model data attachments, not source. The current technical preview is not production-ready. The exact GPU runtime dependency lock, a fresh end-to-end Kaggle T4×2 replay and corresponding browser E2E validation remain pending. Published GitHub Actions CI exercises static and CPU contract tests, not CUDA inference.
 
 [Tiếng Việt](vendor-dependencies.vi.md) · [English](vendor-dependencies.md)
 
