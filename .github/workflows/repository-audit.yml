@@ -1,0 +1,70 @@
+name: CI
+on:
+  push:
+    branches: [main, 'release/**', 'diagnostics/**', 'fix/**', 'refactor/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install CPU test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ci.txt
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Validate Python syntax and notebook cells without GPU
+        run: |
+          python - <<'PY'
+          import ast,json,pathlib
+          for root in ('production-system','scripts','deployment'):
+              for f in pathlib.Path(root).rglob('*.py'):
+                  if 'vendor-' in str(f) or '__pycache__' in str(f): continue
+                  ast.parse(f.read_text(encoding='utf-8'),filename=str(f))
+          for f in pathlib.Path('notebooks').glob('*.ipynb'):
+              b=json.loads(f.read_text(encoding='utf-8'))
+              for i,c in enumerate(b['cells']):
+                  if c['cell_type']=='code':
+                      ast.parse(''.join(c.get('source',[])),filename=f'{f}:cell:{i}')
+          print('SOURCE_AND_NOTEBOOK_SYNTAX=PASS')
+          PY
+      - name: Ensure bilingual documents and language-switch links
+        run: |
+          python - <<'PY'
+          import pathlib
+          roots=[pathlib.Path('.'),pathlib.Path('docs'),pathlib.Path('.github')]
+          for root in roots:
+              for f in root.glob('*.md'):
+                  if f.name in ('LICENSE',):continue
+                  if f.name.endswith('.vi.md'):continue
+                  vi=f.with_name(f.stem+'.vi.md')
+                  assert vi.is_file(),f'Missing Vietnamese counterpart: {f}'
+                  en=f.read_text()
+                  v=vi.read_text()
+                  assert f.name.replace('.md','.vi.md') in en,f'EN switch missing: {f}'
+                  assert f.name in v,f'VI switch missing: {vi}'
+          print('BILINGUAL_LINKS=PASS')
+          PY
+      - name: Verify published README and Kaggle notebook contract
+        run: python scripts/validate_public_demo.py
+      - name: Check Git-tracked confidential or binary artifacts
+        run: |
+          python - <<'PY'
+          import subprocess,pathlib
+          names=subprocess.check_output(['git','ls-files'],text=True).splitlines()
+          forbidden=('.gguf','.safetensors','.sqlite3','.png','.key','.pem')
+          for name in names:
+              lower=name.lower()
+              assert not lower.endswith(forbidden),name
+              assert 'local-secrets' not in lower,name
+          print('TRACKED_ARTIFACT_POLICY=PASS')
+          PY
+      - name: Scan tracked files for accidental secrets
+        run: python scripts/scan_secrets.py
+      - name: Run CPU test suite (process-isolated, no GPU)
+        run: python scripts/run_cpu_tests.py
