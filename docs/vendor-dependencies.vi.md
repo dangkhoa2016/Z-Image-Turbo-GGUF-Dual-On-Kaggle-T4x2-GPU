@@ -1,4 +1,6 @@
-# Phụ thuộc vendor có thể tái lập (bản preview)
+# Phụ thuộc vendor đã kiểm chứng cho Kaggle
+
+> 🌐 Language / Ngôn ngữ: [English](vendor-dependencies.md) | **Tiếng Việt**
 
 GitHub repository là nguồn source code chính. Trên Kaggle, notebook clone repository rồi chạy `python3 scripts/bootstrap_vendor.py`. Script tải wheel upstream đã khóa SHA256 từ PyPI (cần Internet) hoặc sử dụng wheel tải sẵn qua `--wheel-dir PATH`. Script xác minh SHA256 wheel, cây file thư viện và metadata phân phối chứa giấy phép. Không còn dùng Git archive branch trong notebook preview.
 
@@ -6,7 +8,7 @@ Các phiên bản đã đối chiếu: Diffusers 0.41.0 (Apache-2.0), Hugging Fa
 
 Wheel TorchAO phụ thuộc nền tảng; bản đã đối chiếu là Linux x86_64 cp310-abi3, không phải đảm bảo chạy trên mọi hệ thống. Việc đọc phiên bản bằng `importlib.metadata` phải nhắm vào đường dẫn phân phối vendored, không chỉ đọc thư viện được cài sẵn.
 
-GGUF model weights và text-encoder/VAE là model data riêng, không thuộc repository source. Technical Preview chưa sẵn sàng production. Vẫn cần khóa các runtime dependencies khác, kiểm thử fresh clone từ candidate đã xuất bản, kiểm thử GPU T4x2 và browser E2E.
+GGUF model weights và text-encoder/VAE là model data riêng, không thuộc repository source. Technical Preview chưa sẵn sàng production. Vẫn cần khóa chính xác phiên bản thư viện GPU, chạy lại đầu-cuối trên Kaggle T4×2 sạch và nghiệm thu browser E2E tương ứng. GitHub Actions hiện kiểm tra tĩnh và CPU contracts, không chạy CUDA inference.
 
 [Tiếng Việt](vendor-dependencies.vi.md) · [English](vendor-dependencies.md)
 

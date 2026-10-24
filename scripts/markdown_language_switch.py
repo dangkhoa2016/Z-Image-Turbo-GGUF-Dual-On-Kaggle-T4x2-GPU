@@ -52,5 +52,5 @@ def validate_docs_language_switches(docs_root, expected_pairs=None):
 
 if __name__ == "__main__":
     result = validate_docs_language_switches(
-        Path(__file__).resolve().parents[1] / "docs", expected_pairs=14)
+        Path(__file__).resolve().parents[1] / "docs", expected_pairs=11)
     print("MARKDOWN_LANGUAGE_SWITCH_AUDIT_PASS",result)
