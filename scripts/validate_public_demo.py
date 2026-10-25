@@ -42,6 +42,10 @@ def validate():
   assert "P25_" not in user_code and "P23_" not in user_code
  assert "from kaggle_production_demo import ProductionDemo" in source(public["cells"][3])
  assert 'branch = os.environ.get("ZIMAGE_SOURCE_REF", "main")' in source(public["cells"][3])
+ assert 'PINNED_RELEASE_SOURCE_SHA' not in source(public["cells"][3])
+ assert 'revision = os.environ.get("ZIMAGE_SOURCE_SHA", remote).strip().lower()' in source(public["cells"][3])
+ assert 'git", "ls-remote", "--heads", repo, branch' in source(public["cells"][3])
+ assert 'By default, the notebook resolves the selected GitHub' in source(public["cells"][2])
  for i,name in zip((5,7,9,11,13,16,18,20,22,24,27),
                    ("inputs","dependencies","encode","generate","verify",
                     "studio","consumer","galleries","gallery_links","studio_link","monitor")):

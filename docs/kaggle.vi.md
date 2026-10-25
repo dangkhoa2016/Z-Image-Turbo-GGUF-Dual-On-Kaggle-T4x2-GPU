@@ -9,13 +9,13 @@ Mở [notebook production duy nhất](../notebooks/kaggle-dual-gpu-production-de
 **Chỉ test Studio**: ở runtime mới chạy **code cell 3, 5, 7, 16, 18**, gửi prompt qua Studio rồi chạy **cell 27** để monitor chỉ đọc liên tục. Không tính đây là fresh Run All. Nghiệm thu Studio yêu cầu job `ARCHIVED` và PNG được kiểm SHA256; muốn Run All đầy đủ cần chạy đủ 28 cell. Không công khai mật khẩu demo đang có hiệu lực.
 
 ## Chuẩn bị
-Sử dụng Kaggle notebook có **Tesla T4 ×2**, Internet, model GGUF và support dataset theo [README tiếng Việt](../README.vi.md). Notebook chính thức mặc định lấy source từ **`main`**. Muốn tái lập đúng một revision không đổi, đặt `ZIMAGE_SOURCE_SHA` thành Git SHA đầy đủ 40 ký tự trước cell tải source. Nhánh `main` luôn có thể tiếp tục thay đổi nên không phải revision bất biến.
+Sử dụng Kaggle notebook có **Tesla T4 ×2**, Internet, model GGUF và support dataset theo [README tiếng Việt](../README.vi.md). Notebook v1.0.0 mặc định tải mã nguồn trực tiếp từ GitHub **`main`**: truy vấn SHA đầy đủ 40 ký tự của nhánh, checkout và kiểm tra chính xác SHA đó trong phiên chạy. SHA được lưu làm bằng chứng; `main` có thể thay đổi giữa các lần chạy. Để tái lập một revision cố định, chủ động đặt `ZIMAGE_SOURCE_SHA` đủ 40 ký tự trước cell tải source.
 
 ## Dung lượng lưu trữ và bằng chứng lịch sử
 
 Notebook chính thức kiểm tra dung lượng cả `/tmp` và `/kaggle/working` trước khi chạy GPU. Staging local có xác minh hash cần khoảng 8,05 GB cho Qwen3, 5,91 GB cho GGUF và dự phòng 3 GiB. Chỉ đặt `ZIMAGE_GGUF_SOURCE_MODE=auto` trước Bước 02 khi chủ động chấp nhận khả năng đọc trực tiếp chậm ở cold-start.
 
-Kết quả P2.3 sinh ảnh bằng hai GPU và P2.7 load-only đã PASS trong các phiên Kaggle tương ứng; chúng không thay thế việc chạy lại đầu-cuối trên runtime sạch từ notebook công khai hiện hành. Run All hiện tại xuất `p23-runall-acceptance.zip` với PNG, provenance và log chẩn đoán giới hạn. Kiểm tra thông tin đăng nhập còn hiệu lực trước khi công bố output.
+GPU load và inference cần được kiểm lại trên Kaggle runtime hiện tại; mỗi source revision và tài khoản khác phải có bằng chứng riêng. Run All hiện tại xuất `p23-runall-acceptance.zip` với PNG, provenance và log chẩn đoán giới hạn. Kiểm tra thông tin đăng nhập còn hiệu lực trước khi công bố output.
 
 ## Chạy minh chứng GPU trực tiếp trong notebook
 Thực hiện lần lượt **28 cell**. Sau khi clone source, kiểm tra GPU/model và bootstrap vendor, các bước **04–06** mã hóa hai prompt trên GPU0, chạy hai GGUF worker độc lập GPU0/GPU1, kiểm SHA256 của hai PNG 1024 × 1024 và hiển thị kết quả. Kết quả notebook đã xác minh trong cùng workspace được dùng lại; dữ liệu chưa hoàn chỉnh sẽ khiến notebook dừng an toàn. Ảnh do Studio tạo không thay thế minh chứng GPU notebook-native.
@@ -41,4 +41,4 @@ Cell **15–25** mở Studio có xác thực và GPU consumer, khôi phục gall
 Cell **27–28** cho phép theo dõi Studio chỉ đọc. Monitor hiện tại chạy liên tục cho tới khi người dùng chọn **Interrupt Cell**, không gửi yêu cầu sinh ảnh. Hãy lưu PNG, báo cáo và log trước khi kết thúc phiên Kaggle.
 
 ## Trạng thái tái lập
-Các bằng chứng GPU và Studio đã PASS chỉ phản ánh những phiên Kaggle đã ghi nhận. Việc chạy toàn bộ notebook **hiện hành** từ một môi trường Kaggle T4×2 sạch vẫn đang chờ nghiệm thu; CPU/CI PASS không đồng nghĩa GPU đã được chạy lại.
+**Nghiệm thu fresh Run All:** [Quy trình kiểm chứng](evidence-index.vi.md) quy định bằng chứng PNG, SHA256, Studio và gallery. [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0) lưu kết quả và trạng thái thực tế theo Git SHA được notebook in ra. Tái lập `Copy & Edit` bằng tài khoản khác cần chứng minh riêng; CPU CI không thay thế GPU PASS.

@@ -9,13 +9,13 @@ Open [the maintained production notebook](../notebooks/kaggle-dual-gpu-productio
 **Studio-only testing**: on a fresh runtime, run code cells **3, 5, 7, 16, 18**, submit a Studio prompt, then run **cell 27** for continuous read-only monitoring. This does not redo notebook-native inference and does not prove a fresh notebook Run All. Studio is accepted only after a real archived job and verified PNG. Full Run All uses all 28 cells. Protect active Studio credentials.
 
 ## Prepare
-Use a Kaggle notebook with **Tesla T4 ×2**, Internet and the GGUF model/support dataset linked from the [README](../README.md). The canonical notebook clones **`main`** by default. For immutable source reproduction, set `ZIMAGE_SOURCE_SHA` to the complete 40-character commit SHA before running the source checkout cell. A moving `main` checkout is not an immutable release pin.
+Use a Kaggle notebook with **Tesla T4 ×2**, Internet and the GGUF model/support dataset linked from the [README](../README.md). The v1.0.0 notebook retrieves application source directly from GitHub **`main`** by default: it first resolves the branch to a full 40-character Git SHA, then checks out and verifies that exact SHA for the current run. This identifies what was actually executed; `main` may move between runs. To reproduce a chosen immutable revision, explicitly set `ZIMAGE_SOURCE_SHA` to its full 40-character SHA before the source cell.
 
 ## Storage budget and historical evidence
 
 The maintained notebook checks both `/tmp` and `/kaggle/working` before GPU work. Its hash-verified local staging uses approximately 8.05 GB for Qwen3 and 5.91 GB for GGUF, plus a 3 GiB staging reserve. Set `ZIMAGE_GGUF_SOURCE_MODE=auto` before Step 02 only if you intentionally accept a potentially slower cold read directly from Kaggle input.
 
-Historical P2.3 dual-GPU generation and P2.7 load-only records describe their respective completed Kaggle sessions. They are not a substitute for a clean end-to-end replay of the current public notebook. The current Run All writes `p23-runall-acceptance.zip` containing verified PNGs, provenance and bounded diagnostic logs. Review outputs for active credentials before sharing.
+GPU load and inference behavior must be verified anew in the current Kaggle runtime; source revisions and third-party copies require their own evidence. The current Run All writes `p23-runall-acceptance.zip` containing verified PNGs, provenance and bounded diagnostic logs. Review outputs for active credentials before sharing.
 
 ## Run the notebook-native GPU demonstration
 Execute the **28-cell** notebook in order. After source checkout, hardware/model validation and vendor bootstrap, steps **04–06** encode two prompts on GPU0, run independent GPU0/GPU1 GGUF workers, verify their 1024 × 1024 PNG outputs with SHA256 and display the results. A verified prior report in the same workspace can be reused; incomplete results fail closed. Studio-generated PNGs are never substituted for the notebook's GPU proof.
@@ -41,4 +41,4 @@ Cells **15–25** launch the authenticated Studio gateway and GPU consumer, rest
 Cells **27–28** provide the optional, read-only Studio live monitor. The current monitor continues until the operator uses **Interrupt Cell**; it submits no generation requests. Export PNGs, reports and logs before the Kaggle session ends.
 
 ## Reproduction status
-The original dual-GPU and Studio acceptance records cover their documented Kaggle sessions. A complete end-to-end replay of the **current** published notebook from a fresh Kaggle T4×2 environment remains pending; CPU/CI success must not be described as a new GPU PASS.
+**Fresh-run acceptance:** The [validation protocol](evidence-index.md) defines required PNGs, SHA256, Studio and gallery checks. Consult the [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0) for the latest evidence and actual status for the printed source SHA. Independent-account `Copy & Edit` needs its own proof; CPU/CI success is not GPU acceptance.
