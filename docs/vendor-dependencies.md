@@ -8,7 +8,7 @@ Audited versions: Diffusers 0.41.0 (Apache-2.0), Hugging Face Hub 1.28.0 (Apache
 
 Native TorchAO wheel is platform-specific; the audited artifact is Linux x86_64 cp310-abi3. It is not a general cross-platform wheel guarantee. Version metadata from `importlib.metadata` must be read from the explicit vendored distribution paths, rather than blindly from system site-packages.
 
-The GGUF model and text-encoder/VAE support components are separate model data attachments, not source. The current technical preview is not production-ready. The exact GPU runtime dependency lock, a fresh end-to-end Kaggle T4×2 replay and corresponding browser E2E validation remain pending. Published GitHub Actions CI exercises static and CPU contract tests, not CUDA inference.
+The GGUF model and text-encoder/VAE support components are separate model data attachments, not source. This first public release is a demonstrator, not a production-hosted service. GPU Run All and browser acceptance require revision-specific evidence on the [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0); the CPU-verified dependency matrix does not guarantee cross-runtime GPU compatibility. Published GitHub Actions CI exercises static and CPU contract tests, not CUDA inference.
 
 [Tiếng Việt](vendor-dependencies.vi.md) · [English](vendor-dependencies.md)
 

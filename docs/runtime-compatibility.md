@@ -4,7 +4,7 @@
 
 ## Validated reference environment
 
-Z-Image-Turbo GGUF Q6_K has been exercised on **Kaggle Tesla T4 ×2** using a bounded GPU0 prompt-encoding phase and independent GPU0/GPU1 inference workers. Previous end-to-end acceptance includes authenticated browser submission, 1024 × 1024 PNG delivery, SHA256 integrity, and image View/Download. See the [technical evidence index](evidence-index.md) for the exact artifacts and their verification scope.
+Z-Image-Turbo GGUF Q6_K has been exercised on **Kaggle Tesla T4 ×2** using a bounded GPU0 prompt-encoding phase and independent GPU0/GPU1 inference workers. The current revision must independently demonstrate authenticated browser submission, new 1024 × 1024 PNG output, SHA256 integrity, and View/Download. See the [validation index](evidence-index.md) for acceptance requirements.
 
 ## Launch on Kaggle
 
@@ -15,7 +15,7 @@ Z-Image-Turbo GGUF Q6_K has been exercised on **Kaggle Tesla T4 ×2** using a bo
 
 ## Environment compatibility
 
-The repo supplies source and launch orchestration; it deliberately does not distribute model weights, private job artifacts or runtime databases. Rebuilding a runtime requires compatible GPU/PyTorch/Diffusers/Transformers components and the model inputs above. An earlier Kaggle runtime passed the recorded GPU checks; **a new Kaggle session must still be tested on its own before its run can be marked verified**. GitHub's repository audit checks structure and syntax, and additionally runs the CPU contract/security suite (`requirements-ci.txt` + `python scripts/run_cpu_tests.py`); it does not execute GPU inference.
+The repo supplies source and launch orchestration; it deliberately does not distribute model weights, private job artifacts or runtime databases. Rebuilding a runtime requires compatible GPU/PyTorch/Diffusers/Transformers components and the model inputs above. GPU acceptance is established through a Kaggle execution documented for the exact source SHA on the [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0). GitHub's repository audit checks structure and syntax, and additionally runs the CPU contract/security suite (`requirements-ci.txt` + `python scripts/run_cpu_tests.py`); it does not execute GPU inference.
 
 ## Dependency lock
 

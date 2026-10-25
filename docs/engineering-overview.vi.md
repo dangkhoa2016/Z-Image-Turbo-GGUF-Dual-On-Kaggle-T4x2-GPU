@@ -6,7 +6,7 @@ Z-Image-Turbo GGUF Dual là hệ thống trình diễn tạo ảnh trên Kaggle 
 
 ## Bằng chứng kỹ thuật và giới hạn
 
-Bốn JSON nghiệm thu lưu lại kết quả chạy dual-GPU, tạo PNG qua trình duyệt, hiển thị thời gian xử lý và truy cập HTTPS trong môi trường Kaggle trước đây; không thay thế kiểm thử cài đặt sạch. Việc duyệt giao diện gallery không chứng minh tất cả ảnh đã tạo đều đáp ứng đầy đủ tiêu chí chất lượng và độ bám sát prompt. Việc chạy đầu-cuối notebook trên Kaggle T4×2 sạch vẫn **PENDING**.
+Source hiện tại gồm GPU orchestration, Studio có xác thực và hai gallery tĩnh. Kết quả nghiệm thu Run All và browser được công bố theo từng Git SHA trên [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0). Việc duyệt giao diện gallery không chứng minh tất cả ảnh đã tạo đều đáp ứng đầy đủ tiêu chí chất lượng và độ bám sát prompt. Không khẳng định GPU PASS hoặc tái lập độc lập nếu chưa có evidence khớp Git SHA.
 
 ## Tài liệu tham khảo kỹ thuật
 

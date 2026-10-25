@@ -93,6 +93,6 @@ Việc Studio sinh ảnh mới **tách biệt** với hai ảnh được tạo t
 
 Để xem cách **Input → Add Input** hoạt động theo giao diện Kaggle, tham khảo [tài liệu Notebook chính thức](https://www.kaggle.com/docs/notebooks). Cách chọn **framework, variation, version** được giải thích trong [tài liệu Kaggle Models](https://www.kaggle.com/docs/models). Tên nút có thể thay đổi theo bố cục nhưng chức năng tương đương.
 
-## Trạng thái nghiệm thu hiện tại
+## Nghiệm thu theo Git revision
 
-Notebook production được công bố trên **`main`** và xác minh revision mã nguồn khi chạy. Các phiên GPU trước đây đã tạo ảnh notebook có SHA256 hợp lệ và hoàn thành các job Studio; xem [chỉ mục bằng chứng](evidence-index.vi.md) để biết phạm vi nghiệm thu lịch sử. **Vẫn cần nghiệm thu Fresh Run All đầy đủ của phiên bản `main` đang công bố trên Kaggle T4 ×2.**
+Notebook production lấy source từ **`main`** và ghi nhận đúng Git SHA lúc chạy. Để tái lập kết quả, đặt `ZIMAGE_SOURCE_SHA` theo SHA được công bố trên [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0) và kiểm đầu ra notebook khớp SHA này. [Quy trình nghiệm thu](evidence-index.vi.md) quy định evidence cần có; tái lập bằng tài khoản khác phải được chứng minh riêng.

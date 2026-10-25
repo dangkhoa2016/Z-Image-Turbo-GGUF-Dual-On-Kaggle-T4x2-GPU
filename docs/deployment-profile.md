@@ -15,6 +15,6 @@ Two Tesla T4 GPUs support independent inference workers, while bounded GPU0 prom
 
 ## Evidence and intended scope
 
-The [evidence index](evidence-index.md) links to completed dual-GPU, browser and image-integrity checks. Technical completion and human visual-quality review are distinct; gallery presentation acceptance does not establish universal prompt-fidelity PASS. The showcase targets a reproducible technical demo, not a production SLA or permanent public hosting service.
+The [validation index](evidence-index.md) lists the evidence required before this revision can be accepted for fresh GPU, browser and image-integrity checks. Technical completion and human visual-quality review are distinct; gallery presentation acceptance does not establish universal prompt-fidelity PASS. The showcase targets a reproducible technical demo, not a production SLA or permanent public hosting service.
 
 [Runtime compatibility](runtime-compatibility.md) · [Kaggle guide](kaggle.md) · [License notes](../LICENSE-NOTES.md)

@@ -8,7 +8,7 @@ Các phiên bản đã đối chiếu: Diffusers 0.41.0 (Apache-2.0), Hugging Fa
 
 Wheel TorchAO phụ thuộc nền tảng; bản đã đối chiếu là Linux x86_64 cp310-abi3, không phải đảm bảo chạy trên mọi hệ thống. Việc đọc phiên bản bằng `importlib.metadata` phải nhắm vào đường dẫn phân phối vendored, không chỉ đọc thư viện được cài sẵn.
 
-GGUF model weights và text-encoder/VAE là model data riêng, không thuộc repository source. Technical Preview chưa sẵn sàng production. Vẫn cần khóa chính xác phiên bản thư viện GPU, chạy lại đầu-cuối trên Kaggle T4×2 sạch và nghiệm thu browser E2E tương ứng. GitHub Actions hiện kiểm tra tĩnh và CPU contracts, không chạy CUDA inference.
+GGUF model weights và text-encoder/VAE là model data riêng, không thuộc repository source. Đây là lần phát hành công khai đầu tiên của demo, không phải dịch vụ production luôn hoạt động. GPU Run All và browser cần có evidence theo đúng Git SHA trên [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0); dependency đã kiểm CPU không bảo đảm tương thích GPU trên mọi runtime. GitHub Actions hiện kiểm tra tĩnh và CPU contracts, không chạy CUDA inference.
 
 [Tiếng Việt](vendor-dependencies.vi.md) · [English](vendor-dependencies.md)
 

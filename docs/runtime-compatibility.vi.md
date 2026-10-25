@@ -4,7 +4,7 @@
 
 ## Môi trường tham chiếu đã kiểm chứng
 
-Z-Image-Turbo GGUF Q6_K đã chạy thực tế trên **Kaggle Tesla T4 ×2**, với giai đoạn mã hóa prompt có giới hạn trên GPU0 và worker inference độc lập ở GPU0/GPU1. Nghiệm thu đầu-cuối trước đây bao gồm gửi prompt từ trình duyệt đã xác thực, nhận PNG 1024 × 1024, kiểm tra SHA256 và View/Download. Xem [chỉ mục bằng chứng](evidence-index.vi.md) để biết chính xác phạm vi từng lần xác minh.
+Z-Image-Turbo GGUF Q6_K đã chạy thực tế trên **Kaggle Tesla T4 ×2**, với giai đoạn mã hóa prompt có giới hạn trên GPU0 và worker inference độc lập ở GPU0/GPU1. Revision hiện tại phải được kiểm chứng riêng bằng cách gửi prompt đã xác thực, tạo PNG 1024 × 1024 mới, kiểm SHA256 và View/Download. Xem [chỉ mục kiểm chứng](evidence-index.vi.md) để biết điều kiện nghiệm thu.
 
 ## Khởi chạy trên Kaggle
 
@@ -15,7 +15,7 @@ Z-Image-Turbo GGUF Q6_K đã chạy thực tế trên **Kaggle Tesla T4 ×2**, v
 
 ## Tương thích runtime
 
-Repo chứa mã nguồn và notebook khởi chạy, không phân phối weights, artifact riêng tư hay SQLite runtime. Môi trường mới cần phiên bản GPU/PyTorch/Diffusers/Transformers tương thích và dữ liệu model tương ứng. Runtime Kaggle trước đã PASS các bài kiểm tra được lưu; **mỗi phiên Kaggle mới vẫn cần chạy kiểm chứng riêng trước khi đánh dấu là đã xác minh**. GitHub CI kiểm tra cấu trúc và cú pháp, đồng thời chạy bộ kiểm thử hợp đồng/bảo mật trên CPU (`requirements-ci.txt` + `python scripts/run_cpu_tests.py`); CI không thực thi GPU inference.
+Repo chứa mã nguồn và notebook khởi chạy, không phân phối weights, artifact riêng tư hay SQLite runtime. Môi trường mới cần phiên bản GPU/PyTorch/Diffusers/Transformers tương thích và dữ liệu model tương ứng. Chỉ khẳng định GPU PASS khi có kết quả Kaggle khớp Git SHA và bằng chứng công bố trên [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0). GitHub CI kiểm tra cấu trúc và cú pháp, đồng thời chạy bộ kiểm thử hợp đồng/bảo mật trên CPU (`requirements-ci.txt` + `python scripts/run_cpu_tests.py`); CI không thực thi GPU inference.
 
 ## Khoá phụ thuộc runtime
 

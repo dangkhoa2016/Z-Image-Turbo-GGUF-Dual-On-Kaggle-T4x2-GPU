@@ -15,6 +15,6 @@ Hai Tesla T4 cho phép worker inference độc lập; giai đoạn mã hóa prom
 
 ## Bằng chứng và phạm vi
 
-[Chỉ mục bằng chứng](evidence-index.vi.md) dẫn tới các kiểm thử dual-GPU, browser và tính toàn vẹn ảnh đã hoàn tất. PASS kỹ thuật không đồng nghĩa ảnh đạt mọi tiêu chí QC; việc duyệt trình bày gallery không đồng nghĩa tất cả ảnh đều đạt chất lượng hoặc độ bám sát prompt. Dự án nhằm trình diễn hệ thống tạo ảnh có bằng chứng, không cam kết SLA production hay hosting công khai vĩnh viễn.
+[Chỉ mục kiểm chứng](evidence-index.vi.md) liệt kê bằng chứng cần thu thập trước khi nghiệm thu GPU, browser và tính toàn vẹn ảnh của revision mới. PASS kỹ thuật không đồng nghĩa ảnh đạt mọi tiêu chí QC; việc duyệt trình bày gallery không đồng nghĩa tất cả ảnh đều đạt chất lượng hoặc độ bám sát prompt. Dự án nhằm trình diễn hệ thống tạo ảnh có bằng chứng, không cam kết SLA production hay hosting công khai vĩnh viễn.
 
 [Tương thích môi trường](runtime-compatibility.vi.md) · [Kaggle](kaggle.vi.md) · [Giấy phép](../LICENSE-NOTES.vi.md)

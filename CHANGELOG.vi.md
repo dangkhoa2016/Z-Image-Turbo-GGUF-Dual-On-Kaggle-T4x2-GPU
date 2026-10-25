@@ -2,9 +2,15 @@
 
 > 🌐 Language / Ngôn ngữ: [English](CHANGELOG.md) | **Tiếng Việt**
 
-## 16/10/2026 — Bản xem trước kỹ thuật đầu tiên
-- Công bố mã nguồn tạo ảnh GGUF trên hai Tesla T4 và notebook khởi chạy Kaggle.
-- Bao gồm Vue Studio xác thực, điều phối hàng đợi, biên nhận PNG và công cụ khôi phục.
-- Bổ sung tài liệu song ngữ về kỹ thuật, cài đặt, API và giấy phép.
-- Cung cấp CI kiểm tra repository cùng các báo cáo nghiệm thu GPU/trình duyệt/HTTPS đã lưu.
-- Kiểm thử đầu-cuối trên phiên Kaggle sạch vẫn **PENDING**; bộ gallery 48/122 ảnh đã xác minh được phân phối trong GitHub Release.
+## 25/10/2026 — v1.0.0: bản phát hành công khai đầu tiên
+
+- Công bố demo Z-Image-Turbo GGUF Q6_K lấy GitHub làm nguồn, chạy trên Kaggle Tesla T4 ×2, mã hóa prompt có giới hạn trên GPU0 và các worker inference độc lập.
+- Phát hành notebook Kaggle song ngữ 28 cell, Vue Studio có xác thực, tài liệu kỹ thuật EN/VI và CPU contract tests.
+- Phân phối gallery 170 ảnh watermark có checksum qua GitHub Release, tách biệt khỏi source và model weights.
+- Định nghĩa tiêu chí nghiệm thu GPU, Studio, gallery và tái lập độc lập theo Git revision; kết quả kiểm chứng theo Git SHA và artifacts được công bố trên GitHub Release.
+
+## 16/10/2026 — Giai đoạn phát triển (không phải bản phát hành công khai riêng)
+
+- Xây dựng các bản thử nghiệm tạo ảnh dual-T4, Studio xác thực, điều phối job và biên nhận PNG riêng tư.
+- Thực hiện các phép thử kỹ thuật ban đầu và chuẩn bị tài liệu về source, API, cài đặt và giấy phép.
+- Không đưa receipt runtime lịch sử vào Git tree công khai hiện tại; không dùng chúng làm bằng chứng nghiệm thu mới cho v1.0.0.

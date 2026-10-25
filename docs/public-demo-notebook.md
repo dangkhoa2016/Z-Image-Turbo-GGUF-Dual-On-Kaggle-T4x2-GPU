@@ -93,6 +93,6 @@ Studio generation is **separate** from notebook-native GPU inference. The two ve
 
 See [Kaggle's official Notebook instructions](https://www.kaggle.com/docs/notebooks) for the current **Input → Add Input** flow and [Kaggle Models documentation](https://www.kaggle.com/docs/models) for framework, variation and version selection. Kaggle may change button labels without changing the underlying steps.
 
-## Current validation scope
+## Revision-specific validation
 
-The production notebook is published on **`main`** and checks out its verified source revision. Earlier GPU demonstrations produced SHA256-verified notebook images and completed Studio jobs; see the [evidence index](evidence-index.md) for the scope of those historical results. **A fresh end-to-end Run All of the currently published `main` has not yet been verified on Kaggle T4 ×2.**
+The production notebook is published on **`main`** and records the exact Git revision at runtime. For reproduction, pin `ZIMAGE_SOURCE_SHA` to a SHA from the [GitHub Release](https://github.com/dangkhoa2016/Z-Image-Turbo-GGUF-Dual-On-Kaggle-T4x2-GPU/releases/tag/v1.0.0) acceptance report; verify the notebook output matches it. The [validation protocol](evidence-index.md) defines evidence requirements. Independent-account copying and replay require their own proof.
